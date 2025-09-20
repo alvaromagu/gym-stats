@@ -21,6 +21,7 @@ export default defineConfig(
       '@typescript-eslint/no-magic-numbers': 'off',
       'no-console': 'off',
       'eslint-comments/require-description': 'off',
+      '@typescript-eslint/no-redundant-type-constituents': 'off',
     },
   },
   {

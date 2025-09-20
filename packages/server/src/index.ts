@@ -1,10 +1,9 @@
-import type { Server } from '@/server';
 import { container } from '@/di';
 
 container
   .register()
   .then(async () => {
-    const server = container.get<Server>('server');
+    const server = container.get('server');
     await server.start();
   })
   .catch((error: unknown) => {

@@ -107,7 +107,8 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["./src/contexts/shared/*"]
+      "@shared/*": ["./src/contexts/shared/*"],
+      "@auth/*": ["./src/contexts/auth/*"]
     }
   }
 }
