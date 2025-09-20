@@ -16,6 +16,7 @@ import type { UserRepository } from '@auth/domain/user-repository';
 import { SupaUserRepository } from '@auth/infra/supa-user-repository';
 import type { Logger } from '@/contexts/shared/domain/logger';
 import type { Config } from '@/contexts/shared/domain/config';
+import { UserCreator } from '@/contexts/auth/app/user-creator';
 
 interface Dependencies {
   logger: Logger;
@@ -23,6 +24,7 @@ interface Dependencies {
   server: Server;
   supaClient: SupaClient;
   userRepository: UserRepository;
+  userCreator: UserCreator;
 }
 
 export class Container {
@@ -40,6 +42,7 @@ export class Container {
       server: asClass(Server).singleton(),
       supaClient: asValue(supaClient),
       userRepository: asClass<UserRepository>(SupaUserRepository).singleton(),
+      userCreator: asClass(UserCreator).singleton(),
     });
   }
 

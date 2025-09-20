@@ -1,21 +1,25 @@
-import express, { type Express } from 'express';
+import express, { Router } from 'express';
 import type * as http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import type { Logger } from '@shared/domain/logger';
 import type { Config } from '@shared/domain/config';
+import { registerRoutes } from './routes';
 
 export class Server {
-  express: Express;
+  private readonly express = express();
+  private readonly router = Router();
   http!: http.Server;
 
   constructor(
     private readonly config: Config,
     private readonly logger: Logger,
   ) {
-    this.express = express();
+    this.express.use(express.json());
+    this.express.use(this.router);
   }
 
   async start(): Promise<void> {
+    await registerRoutes(this.router);
     // eslint-disable-next-line promise/avoid-new
     await new Promise<void>((resolve) => {
       this.http = this.express.listen(this.config.port, () => {
