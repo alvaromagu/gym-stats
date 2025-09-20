@@ -1,0 +1,26 @@
+{
+  "name": "gym-stats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "format": "prettier --write ."
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown",
+    "**/*.{js,ts,tsx,jsx}": "eslint --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.2",
+  "devDependencies": {
+    "eslint-config-love": "125.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "9.1.7",
+    "lint-staged": "16.1.6",
+    "prettier": "3.6.2"
+  }
+}
