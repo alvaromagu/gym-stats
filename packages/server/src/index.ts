@@ -1,11 +1,13 @@
-import expres from 'express';
-import { log } from './contexts/shared/logger.js';
+import type { Server } from '@/server';
+import { container } from '@/di';
 
-const DEFAULT_PORT = 3000;
-
-const app = expres();
-const port = process.env.PORT ?? DEFAULT_PORT;
-
-app.listen(port, () => {
-  log(`Server is running on http://localhost:${port}`);
-});
+container
+  .register()
+  .then(async () => {
+    const server = container.get<Server>('server');
+    await server.start();
+  })
+  .catch((error: unknown) => {
+    console.error('Error registering Dependency Injection container:', error);
+    process.exit(1);
+  });

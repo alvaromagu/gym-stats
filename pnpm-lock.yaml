@@ -43,6 +43,12 @@ importers:
 
   packages/server:
     dependencies:
+      awilix:
+        specifier: 12.0.5
+        version: 12.0.5
+      dotenv:
+        specifier: 17.2.2
+        version: 17.2.2
       express:
         specifier: 5.1.0
         version: 5.1.0
@@ -1126,6 +1132,13 @@ packages:
       }
     engines: { node: '>= 0.4' }
 
+  awilix@12.0.5:
+    resolution:
+      {
+        integrity: sha512-Qf/V/hRo6DK0FoBKJ9QiObasRxHAhcNi0mV6kW2JMawxS3zq6Un+VsZmVAZDUfvB+MjTEiJ2tUJUl4cr0JiUAw==,
+      }
+    engines: { node: '>=16.3.0' }
+
   balanced-match@1.0.2:
     resolution:
       {
@@ -1207,6 +1220,12 @@ packages:
         integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==,
       }
     engines: { node: '>=6' }
+
+  camel-case@4.1.2:
+    resolution:
+      {
+        integrity: sha512-gxGWBrTT1JuMx6R+o5PTXMmUnhnVzLQ9SNutD4YqKtI6ap897t3tKECYla6gCWEkplXnlNybEkZg9GEGxKFCgw==,
+      }
 
   caniuse-lite@1.0.30001743:
     resolution:
@@ -1398,6 +1417,13 @@ packages:
         integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==,
       }
     engines: { node: '>=0.10.0' }
+
+  dotenv@17.2.2:
+    resolution:
+      {
+        integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==,
+      }
+    engines: { node: '>=12' }
 
   dunder-proto@1.0.1:
     resolution:
@@ -2408,6 +2434,12 @@ packages:
       }
     engines: { node: '>=18' }
 
+  lower-case@2.0.2:
+    resolution:
+      {
+        integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==,
+      }
+
   lru-cache@5.1.1:
     resolution:
       {
@@ -2523,6 +2555,12 @@ packages:
       }
     engines: { node: '>= 0.6' }
 
+  no-case@3.0.4:
+    resolution:
+      {
+        integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==,
+      }
+
   node-releases@2.0.21:
     resolution:
       {
@@ -2632,6 +2670,12 @@ packages:
         integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==,
       }
     engines: { node: '>= 0.8' }
+
+  pascal-case@3.1.2:
+    resolution:
+      {
+        integrity: sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g==,
+      }
 
   path-exists@4.0.0:
     resolution:
@@ -3160,6 +3204,12 @@ packages:
     resolution:
       {
         integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==,
+      }
+
+  tslib@2.8.1:
+    resolution:
+      {
+        integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==,
       }
 
   tsx@4.20.5:
@@ -4012,6 +4062,11 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
+  awilix@12.0.5:
+    dependencies:
+      camel-case: 4.1.2
+      fast-glob: 3.3.3
+
   balanced-match@1.0.2: {}
 
   baseline-browser-mapping@2.8.6: {}
@@ -4071,6 +4126,11 @@ snapshots:
       get-intrinsic: 1.3.0
 
   callsites@3.1.0: {}
+
+  camel-case@4.1.2:
+    dependencies:
+      pascal-case: 3.1.2
+      tslib: 2.8.1
 
   caniuse-lite@1.0.30001743: {}
 
@@ -4167,6 +4227,8 @@ snapshots:
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
+
+  dotenv@17.2.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -4905,6 +4967,10 @@ snapshots:
       strip-ansi: 7.1.2
       wrap-ansi: 9.0.2
 
+  lower-case@2.0.2:
+    dependencies:
+      tslib: 2.8.1
+
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
@@ -4949,6 +5015,11 @@ snapshots:
   natural-compare@1.4.0: {}
 
   negotiator@1.0.0: {}
+
+  no-case@3.0.4:
+    dependencies:
+      lower-case: 2.0.2
+      tslib: 2.8.1
 
   node-releases@2.0.21: {}
 
@@ -5025,6 +5096,11 @@ snapshots:
       callsites: 3.1.0
 
   parseurl@1.3.3: {}
+
+  pascal-case@3.1.2:
+    dependencies:
+      no-case: 3.0.4
+      tslib: 2.8.1
 
   path-exists@4.0.0: {}
 
@@ -5374,6 +5450,8 @@ snapshots:
       json5: 1.0.2
       minimist: 1.2.8
       strip-bom: 3.0.0
+
+  tslib@2.8.1: {}
 
   tsx@4.20.5:
     dependencies:

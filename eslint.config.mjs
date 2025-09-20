@@ -15,6 +15,12 @@ export default defineConfig(
   {
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/class-methods-use-this': 'off',
+      '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+      '@typescript-eslint/no-magic-numbers': 'off',
+      'no-console': 'off',
+      'eslint-comments/require-description': 'off',
     },
   },
   {
