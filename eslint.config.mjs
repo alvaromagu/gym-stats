@@ -17,5 +17,8 @@ export default defineConfig(
       '@typescript-eslint/explicit-function-return-type': 'off',
     },
   },
+  {
+    ignores: ['node_modules', 'dist'],
+  },
   eslintConfigPrettier,
 );

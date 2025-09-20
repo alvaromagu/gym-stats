@@ -8,7 +8,9 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "dev:web": "pnpm run --filter=web dev",
-    "build:web": "pnpm run --filter=web build"
+    "build:web": "pnpm run --filter=web build",
+    "dev:server": "pnpm run --filter=server dev",
+    "build:server": "pnpm run --filter=server tsc"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",
