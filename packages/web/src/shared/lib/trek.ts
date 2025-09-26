@@ -12,6 +12,28 @@ function apiUrl(path: string) {
   return `${baseUrl}${path}`;
 }
 
+interface GSApiError {
+  errors: Array<{
+    message: string;
+  }>;
+}
+
+function getApiMessage(err: unknown): string {
+  if (
+    err != null &&
+    'errors' in (err as GSApiError) &&
+    Array.isArray((err as GSApiError).errors)
+  ) {
+    const message = (err as GSApiError).errors.find(
+      (e) => typeof e.message === 'string',
+    )?.message;
+    if (message != null && message.trim() !== '') {
+      return message;
+    }
+  }
+  return 'Error en la solicitud a la API';
+}
+
 async function trekFetch(
   url: string,
   options: RequestOptions = {},
@@ -23,10 +45,18 @@ async function trekFetch(
     const response = await fetch(url, finalOptions);
     if (!response.ok) {
       console.error('HTTP error! status:', response.status);
-      throw new ApiError(response.status, 'Error en la solicitud a la API');
+      let apiMessage = 'Error en la solicitud a la API';
+      try {
+        const errorData = (await response.json()) as unknown;
+        apiMessage = getApiMessage(errorData);
+      } catch (err) {}
+      throw new ApiError(response.status, apiMessage);
     }
     return response;
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.error('Fetch operation failed:', error);
     throw new TrekError('Error al conectar con la API');
   }
