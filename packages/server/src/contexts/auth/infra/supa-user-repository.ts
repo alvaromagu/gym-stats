@@ -16,15 +16,16 @@ export class SupaUserRepository
     if (error != null) {
       return null;
     }
+    console.log(data);
     return new User(
       data.id,
       data.email,
       data.full_name,
       (data.credentials as any[]).map((cred) => {
-        const publicKey = JSON.parse(cred.pubblicKey as string);
+        console.log(cred);
         return {
           ...cred,
-          publicKey,
+          publicKey: Uint8Array.from(cred.publicKey as string),
         } as WebAuthnCredential;
       }),
       data.current_challenge,
