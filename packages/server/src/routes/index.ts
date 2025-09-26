@@ -3,6 +3,7 @@ import { glob } from 'glob';
 import { validationResult } from 'express-validator';
 import httpStatus from 'http-status';
 import path from 'node:path';
+import { GSApiError, GSError } from '@/contexts/shared/domain/error';
 
 export async function registerRoutes(router: Router): Promise<void> {
   const globPattern =
@@ -45,4 +46,24 @@ export function validateReqSchema(
     return { [err.type]: err.msg };
   });
   res.status(httpStatus.BAD_REQUEST).json({ errors });
+}
+
+export function catchErrors(
+  err: unknown,
+  _: Request,
+  res: Response,
+  __: NextFunction,
+): void {
+  console.error(err);
+  if (err instanceof GSApiError) {
+    res.status(err.status).json({ errors: [{ message: err.message }] });
+  } else if (err instanceof GSError) {
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .json({ errors: [{ message: err.message }] });
+  } else {
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ errors: [{ message: 'Unexpected server error' }] });
+  }
 }

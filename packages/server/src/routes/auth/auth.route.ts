@@ -17,17 +17,11 @@ export const register = (router: Router): void => {
     registerSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
-      try {
-        const id = await userCreator.execute({
-          email: req.body.email,
-          fullName: req.body.fullName,
-        });
-        res.status(httpStatus.CREATED).json({ id });
-      } catch (error) {
-        res
-          .status(httpStatus.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Internal Server Error' });
-      }
+      const id = await userCreator.execute({
+        email: req.body.email,
+        fullName: req.body.fullName,
+      });
+      res.status(httpStatus.CREATED).json({ id });
     },
   );
 };
