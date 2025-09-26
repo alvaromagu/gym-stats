@@ -4,6 +4,7 @@ import { validationResult } from 'express-validator';
 import httpStatus from 'http-status';
 import path from 'node:path';
 import { GSApiError, GSError } from '@/contexts/shared/domain/error';
+import { container } from '@/di';
 
 export async function registerRoutes(router: Router): Promise<void> {
   const globPattern =
@@ -19,11 +20,14 @@ export async function registerRoutes(router: Router): Promise<void> {
 }
 
 async function register(routePath: string, router: Router): Promise<void> {
+  const logger = container.get('logger');
   const route = await import(routePath).catch(() => {
-    console.error(`error resolving route on path ${routePath}`);
+    logger.error(`error resolving route on path ${routePath}`);
   });
   if (route == null || typeof route.register !== 'function') {
-    console.warn(`route ${routePath} doesnt have a register exported function`);
+    logger.warning(
+      `route ${routePath} doesnt have a register exported function`,
+    );
     return;
   }
   route.register(router);
@@ -54,7 +58,8 @@ export function catchErrors(
   res: Response,
   __: NextFunction,
 ): void {
-  console.error(err);
+  const logger = container.get('logger');
+  logger.error(err);
   if (err instanceof GSApiError) {
     res.status(err.status).json({ errors: [{ message: err.message }] });
   } else if (err instanceof GSError) {
@@ -66,4 +71,14 @@ export function catchErrors(
       .status(httpStatus.INTERNAL_SERVER_ERROR)
       .json({ errors: [{ message: 'Unexpected server error' }] });
   }
+}
+
+export function routeLogger(
+  req: Request,
+  _: Response,
+  next: NextFunction,
+): void {
+  const logger = container.get('logger');
+  logger.info(`[${req.method}] ${req.originalUrl}`);
+  next();
 }
