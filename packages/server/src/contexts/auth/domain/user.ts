@@ -1,4 +1,5 @@
 import { Aggregate } from '@shared/domain/aggregate';
+import type { WebAuthnCredential } from '@simplewebauthn/server';
 
 function validateId(id: unknown): void {
   if (typeof id !== 'string') {
@@ -34,6 +35,8 @@ export class User extends Aggregate {
     public readonly id: string,
     public readonly email: string,
     public readonly fullName: string,
+    public readonly credentials: WebAuthnCredential[],
+    public readonly currentChallenge: string | null,
   ) {
     super();
     validateId(id);
@@ -46,6 +49,7 @@ export class User extends Aggregate {
       id: this.id,
       email: this.email,
       fullName: this.fullName,
+      credentials: this.credentials,
     };
   }
 }

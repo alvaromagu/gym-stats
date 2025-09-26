@@ -33,16 +33,22 @@ export interface Database {
     Tables: {
       users: {
         Row: {
+          credentials: Json;
+          current_challenge: string | null;
           email: string;
           full_name: string;
           id: string;
         };
         Insert: {
+          credentials: Json;
+          current_challenge?: string | null;
           email: string;
           full_name: string;
           id?: string;
         };
         Update: {
+          credentials?: Json;
+          current_challenge?: string | null;
           email?: string;
           full_name?: string;
           id?: string;

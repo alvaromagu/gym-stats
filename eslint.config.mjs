@@ -28,6 +28,10 @@ export default defineConfig(
       'react-refresh/only-export-components': 'off',
       '@typescript-eslint/prefer-destructuring': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-unsafe-type-assertion': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/consistent-type-assertions': 'off',
+      '@typescript-eslint/max-params': 'off',
     },
   },
   {

@@ -1,6 +1,7 @@
 import { SupaRepository } from '@shared/infra/persistance/supa-repository';
 import { User } from '@auth/domain/user';
 import type { UserRepository } from '@auth/domain/user-repository';
+import type { WebAuthnCredential } from '@simplewebauthn/server';
 
 export class SupaUserRepository
   extends SupaRepository
@@ -15,7 +16,19 @@ export class SupaUserRepository
     if (error != null) {
       return null;
     }
-    return new User(data.id, data.email, data.full_name);
+    return new User(
+      data.id,
+      data.email,
+      data.full_name,
+      (data.credentials as any[]).map((cred) => {
+        const publicKey = JSON.parse(cred.pubblicKey as string);
+        return {
+          ...cred,
+          publicKey,
+        } as WebAuthnCredential;
+      }),
+      data.current_challenge,
+    );
   }
 
   async create(user: User): Promise<void> {
@@ -23,6 +36,11 @@ export class SupaUserRepository
       id: user.id,
       email: user.email,
       full_name: user.fullName,
+      credentials: user.credentials.map((cred) => ({
+        ...cred,
+        publicKey: Buffer.from(cred.publicKey).toString('base64'),
+      })),
+      current_challenge: user.currentChallenge,
     });
     if (error != null) {
       throw error;
@@ -35,6 +53,11 @@ export class SupaUserRepository
       .update({
         email: user.email,
         full_name: user.fullName,
+        credentials: user.credentials.map((cred) => ({
+          ...cred,
+          publicKey: Buffer.from(cred.publicKey).toString('base64'),
+        })),
+        current_challenge: user.currentChallenge,
       })
       .eq('id', user.id);
     if (error != null) {

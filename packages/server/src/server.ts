@@ -31,7 +31,6 @@ export class Server {
     // eslint-disable-next-line promise/avoid-new
     await new Promise<void>((resolve) => {
       this.http = this.express.listen(this.config.port, () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const { port } = this.http.address() as AddressInfo;
         this.logger.info(`🚀 Application running on http://localhost:${port}`);
         resolve();

@@ -17,11 +17,31 @@ export const register = (router: Router): void => {
     registerSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
-      const id = await userCreator.execute({
+      const optionsJSON = await userCreator.execute({
         email: req.body.email,
         fullName: req.body.fullName,
       });
-      res.status(httpStatus.CREATED).json({ id });
+      res.status(httpStatus.CREATED).json(optionsJSON);
+    },
+  );
+
+  const verifyRegisterSchema = [
+    body('email').exists().isString().notEmpty({ ignore_whitespace: true }),
+    body('registrationResponse').exists().isObject(),
+  ];
+  const userRegistrationVerifier = container.get('userRegistrationVerifier');
+
+  router.post(
+    '/auth/verify-register',
+    verifyRegisterSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const { email, registrationResponse } = req.body;
+      const result = await userRegistrationVerifier.execute({
+        email,
+        registrationResponse,
+      });
+      res.status(httpStatus.OK).json(result);
     },
   );
 };

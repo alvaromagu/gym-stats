@@ -15,4 +15,6 @@ export const config: Config = {
   port: process.env.PORT ?? DEFAULT_PORT,
   supabaseKey: process.env.SUPABASE_KEY,
   origins,
+  rpName: process.env.RP_NAME ?? 'Gym Stats',
+  rpID: process.env.RP_ID ?? 'localhost',
 };
