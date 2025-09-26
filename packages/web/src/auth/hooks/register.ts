@@ -1,7 +1,8 @@
-import { delay } from '@/shared/lib/delay';
 import { useState, type FormEvent } from 'react';
 import { toast } from 'sonner';
 import { register } from '@/auth/services/register';
+import { startRegistration } from '@simplewebauthn/browser';
+import { verifyRegistration } from '../services/verify-registration';
 
 export function useRegister() {
   const [loading, setLoading] = useState(false);
@@ -24,18 +25,20 @@ export function useRegister() {
       toast.error('Por favor, introduce un nombre completo válido.');
       return;
     }
+    const emailTrimmed = email.trim();
     setLoading(true);
     await register({
-      email: email.trim(),
+      email: emailTrimmed,
       fullName: fullName.trim(),
     })
-      .then(async () => {
-        await delay(500);
-        toast.success(
-          'Cuenta creada correctamente. Revisa tu correo electrónico para obtener la clave de acceso.',
-        );
-        event.currentTarget.reset();
-      })
+      .then(async (opts) => await startRegistration({ optionsJSON: opts }))
+      .then(
+        async (registrationResponse) =>
+          await verifyRegistration({
+            email: emailTrimmed,
+            registrationResponse,
+          }),
+      )
       .finally(() => {
         setLoading(false);
       });

@@ -1,3 +1,4 @@
+import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/browser';
 import { trek } from '@/shared/lib/trek';
 
 export async function register({
@@ -7,5 +8,8 @@ export async function register({
   email: string;
   fullName: string;
 }) {
-  return await trek.post('/auth/register', { email, fullName });
+  return await trek.post<PublicKeyCredentialCreationOptionsJSON>(
+    '/auth/register',
+    { email, fullName },
+  );
 }
