@@ -8,7 +8,11 @@ if (process.env.SUPABASE_KEY == null || process.env.SUPABASE_KEY === '') {
   throw new Error('Missing SUPABASE_KEY environment variable');
 }
 
+const origin = process.env.ORIGIN;
+const origins = origin?.split(',') ?? [];
+
 export const config: Config = {
   port: process.env.PORT ?? DEFAULT_PORT,
   supabaseKey: process.env.SUPABASE_KEY,
+  origins,
 };

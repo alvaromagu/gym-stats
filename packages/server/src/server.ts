@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import cors from 'cors';
 import type * as http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import type { Logger } from '@shared/domain/logger';
@@ -14,6 +15,11 @@ export class Server {
     private readonly config: Config,
     private readonly logger: Logger,
   ) {
+    this.express.use(
+      cors({
+        origin: this.config.origins,
+      }),
+    );
     this.express.use(express.json());
     this.express.use(this.router);
   }
