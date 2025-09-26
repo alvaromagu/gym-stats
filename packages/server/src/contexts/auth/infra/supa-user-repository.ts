@@ -16,18 +16,17 @@ export class SupaUserRepository
     if (error != null) {
       return null;
     }
-    console.log(data);
     return new User(
       data.id,
       data.email,
       data.full_name,
-      (data.credentials as any[]).map((cred) => {
-        console.log(cred);
-        return {
-          ...cred,
-          publicKey: Uint8Array.from(cred.publicKey as string),
-        } as WebAuthnCredential;
-      }),
+      (data.credentials as any[]).map(
+        (cred) =>
+          ({
+            ...cred,
+            publicKey: Buffer.from(cred.publicKey as string, 'base64'),
+          }) as WebAuthnCredential,
+      ),
       data.current_challenge,
     );
   }
