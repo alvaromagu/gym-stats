@@ -9,6 +9,9 @@ export function App() {
       <header className='p-2 sticky border-b top-0 bg-background'>
         <nav className='flex justify-center'>
           <Button variant={'link'} asChild>
+            <Link href='/login'>Iniciar sesión</Link>
+          </Button>
+          <Button variant={'link'} asChild>
             <Link href='/register'>Crear cuenta</Link>
           </Button>
         </nav>
