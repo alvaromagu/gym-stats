@@ -4,4 +4,5 @@ export interface Config {
   origins: string[];
   rpName: string;
   rpID: string;
+  jwtSecret: string;
 }

@@ -7,10 +7,25 @@ import {
   type VerifiedAuthenticationResponse,
 } from '@simplewebauthn/server';
 import { User } from '../domain/user';
+import jwt, { type SignOptions } from 'jsonwebtoken';
+import { Token } from '../domain/token';
+import { hashToken } from './hash-token';
+import type { TokenRepository } from '../domain/token-repository';
+
+type AuthVerifierResponse =
+  | {
+      verified: false;
+      token: undefined;
+    }
+  | {
+      verified: true;
+      token: string;
+    };
 
 export class AuthVerifier {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly tokenRepository: TokenRepository,
     private readonly config: Config,
   ) {}
 
@@ -20,9 +35,7 @@ export class AuthVerifier {
   }: {
     email: string;
     authResponse: AuthenticationResponseJSON;
-  }): Promise<{
-    verified: boolean;
-  }> {
+  }): Promise<AuthVerifierResponse> {
     const user = await this.userRepository.findByEmail(email);
     if (user == null) {
       throw new GSApiError('User not found', 404);
@@ -73,7 +86,51 @@ export class AuthVerifier {
         null,
       );
       await this.userRepository.update(updatedUser);
+      const payload = {
+        userId: user.id,
+        email: user.email,
+        fullName: user.fullName,
+      };
+      const options: SignOptions = {
+        expiresIn: '1d',
+        issuer: this.config.rpID,
+        subject: user.id,
+      };
+      let tokenStr: string | undefined = undefined;
+      try {
+        tokenStr = jwt.sign(payload, this.config.jwtSecret, options);
+      } catch (error) {
+        const _error = error as Error;
+        throw new GSApiError(`JWT sign error: ${_error.message}`, 500);
+      }
+      const token = this.getToken({ user, tokenStr });
+      await this.tokenRepository.create(token);
+      return { verified: true, token: tokenStr };
     }
-    return { verified };
+    return { verified: false, token: undefined };
+  }
+
+  private getToken({
+    user,
+    tokenStr,
+  }: {
+    user: User;
+    tokenStr: string;
+  }): Token {
+    const decoded = jwt.decode(tokenStr) as jwt.JwtPayload | null;
+    if (decoded?.exp == null) {
+      throw new GSApiError(
+        'JWT generated without a valid expiration time.',
+        400,
+      );
+    }
+    const expiresAt = new Date(decoded.exp * 1000);
+    return new Token(
+      crypto.randomUUID(),
+      user.id,
+      hashToken(tokenStr),
+      expiresAt,
+      new Date(),
+    );
   }
 }

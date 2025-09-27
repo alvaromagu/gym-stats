@@ -20,6 +20,8 @@ import { UserCreator } from '@/contexts/auth/app/user-creator';
 import { UserRegistrationVerifier } from '@/contexts/auth/app/user-registration-verifier';
 import { AuthVerifier } from '@/contexts/auth/app/auth-verifier';
 import { AuthOptsCreator } from '@/contexts/auth/app/auth-opts-creator';
+import type { TokenRepository } from '@/contexts/auth/domain/token-repository';
+import { SupaTokenRepository } from '@/contexts/auth/infra/supa-token-repository';
 
 interface Dependencies {
   logger: Logger;
@@ -27,6 +29,7 @@ interface Dependencies {
   server: Server;
   supaClient: SupaClient;
   userRepository: UserRepository;
+  tokenRepository: TokenRepository;
   userCreator: UserCreator;
   userRegistrationVerifier: UserRegistrationVerifier;
   authOptsCreator: AuthOptsCreator;
@@ -48,6 +51,8 @@ export class Container {
       server: asClass(Server).singleton(),
       supaClient: asValue(supaClient),
       userRepository: asClass<UserRepository>(SupaUserRepository).singleton(),
+      tokenRepository:
+        asClass<TokenRepository>(SupaTokenRepository).singleton(),
       userCreator: asClass(UserCreator).singleton(),
       userRegistrationVerifier: asClass(UserRegistrationVerifier).singleton(),
       authOptsCreator: asClass(AuthOptsCreator).singleton(),

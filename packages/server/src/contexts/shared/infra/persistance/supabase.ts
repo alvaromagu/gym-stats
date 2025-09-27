@@ -31,6 +31,38 @@ export interface Database {
   };
   public: {
     Tables: {
+      tokens: {
+        Row: {
+          created_at: string;
+          expires_at: string;
+          hash: string;
+          id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at: string;
+          expires_at: string;
+          hash: string;
+          id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          expires_at?: string;
+          hash?: string;
+          id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'tokens_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       users: {
         Row: {
           credentials: Json;
