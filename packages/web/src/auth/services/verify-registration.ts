@@ -1,7 +1,4 @@
-import type {
-  PublicKeyCredentialCreationOptionsJSON,
-  RegistrationResponseJSON,
-} from '@simplewebauthn/browser';
+import type { RegistrationResponseJSON } from '@simplewebauthn/browser';
 import { trek } from '@/shared/lib/trek';
 
 export async function verifyRegistration({
@@ -11,8 +8,7 @@ export async function verifyRegistration({
   email: string;
   registrationResponse: RegistrationResponseJSON;
 }) {
-  return await trek.post<PublicKeyCredentialCreationOptionsJSON>(
-    '/auth/verify-register',
-    { email, registrationResponse },
-  );
+  return await trek.post<{
+    verified: boolean;
+  }>('/auth/verify-register', { email, registrationResponse });
 }

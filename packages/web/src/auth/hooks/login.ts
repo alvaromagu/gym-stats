@@ -1,5 +1,8 @@
-import { delay } from '@/shared/lib/delay';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { generateAuthOptions } from '../services/generate-auth-options';
+import { startAuthentication } from '@simplewebauthn/browser';
+import { verifyAuth } from '../services/verify-auth';
 
 export function useLogin() {
   const [loading, setLoading] = useState(false);
@@ -11,10 +14,28 @@ export function useLogin() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const { email } = Object.fromEntries(formData.entries());
+    if (typeof email !== 'string' || email.trim().length === 0) {
+      toast.error('Por favor, introduce un correo electrónico válido.');
+      return;
+    }
+    const emailTrimmed = email.trim();
     setLoading(true);
-    console.log({ email });
-    await delay(2000);
-    setLoading(false);
+    await generateAuthOptions({ email: emailTrimmed })
+      .then(async (opts) => await startAuthentication({ optionsJSON: opts }))
+      .then(
+        async (authResponse) =>
+          await verifyAuth({ email: emailTrimmed, authResponse }),
+      )
+      .then(({ verified }) => {
+        if (verified) {
+          toast.success('¡Su inicio de sesión ha sido verificado!');
+        } else {
+          toast.error('No se ha podido verificar su inicio de sesión.');
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return { loading, handleSubmit };
