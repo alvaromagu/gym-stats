@@ -31,6 +31,30 @@ export class SupaUserRepository
     );
   }
 
+  async findById(id: string): Promise<User | null> {
+    const { data, error } = await this.client
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error != null) {
+      return null;
+    }
+    return new User(
+      data.id,
+      data.email,
+      data.full_name,
+      (data.credentials as any[]).map(
+        (cred) =>
+          ({
+            ...cred,
+            publicKey: Buffer.from(cred.publicKey as string, 'base64'),
+          }) as WebAuthnCredential,
+      ),
+      data.current_challenge,
+    );
+  }
+
   async create(user: User): Promise<void> {
     const { error } = await this.client.from('users').insert({
       id: user.id,

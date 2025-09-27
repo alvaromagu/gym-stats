@@ -23,6 +23,8 @@ import { AuthOptsCreator } from '@/contexts/auth/app/auth-opts-creator';
 import type { TokenRepository } from '@/contexts/auth/domain/token-repository';
 import { SupaTokenRepository } from '@/contexts/auth/infra/supa-token-repository';
 import { SessionCloser } from '@/contexts/auth/app/session-closer';
+import { UserUpdater } from '@/contexts/auth/app/user-updater';
+import { UserFinder } from '@/contexts/auth/app/user-finder';
 
 interface Dependencies {
   logger: Logger;
@@ -36,6 +38,8 @@ interface Dependencies {
   authOptsCreator: AuthOptsCreator;
   authVerifier: AuthVerifier;
   sessionCloser: SessionCloser;
+  userUpdater: UserUpdater;
+  userFinder: UserFinder;
 }
 
 export class Container {
@@ -60,6 +64,8 @@ export class Container {
       authOptsCreator: asClass(AuthOptsCreator).singleton(),
       authVerifier: asClass(AuthVerifier).singleton(),
       sessionCloser: asClass(SessionCloser).singleton(),
+      userUpdater: asClass(UserUpdater).singleton(),
+      userFinder: asClass(UserFinder).singleton(),
     });
   }
 

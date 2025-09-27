@@ -137,6 +137,9 @@ async function patch<T>(url: string, body: unknown): Promise<T> {
       body: JSON.stringify(body),
       headers: getHeaders(),
     });
+    if (res.status === 204) {
+      return {} as T;
+    }
     return (await res.json()) as T;
   } catch (error: unknown) {
     trekErrorHandler(error as TrekError | ApiError);

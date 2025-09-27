@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from 'react';
 import { useAuthUser } from './auth-context';
-import { delay } from '@/shared/lib/delay';
 import { logout } from '../services/logout';
 import { tokenKey } from '@/shared/constants/session-keys';
+import { toast } from 'sonner';
+import { updateUser } from '../services/update-user';
 
 export function useProfile() {
   const { reloadSession } = useAuthUser();
@@ -10,11 +11,22 @@ export function useProfile() {
   const [saving, setSaving] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
-  async function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
-    await delay(1000);
-    setSaving(false);
+    const formData = new FormData(event.currentTarget);
+    const { fullName } = Object.fromEntries(formData.entries());
+    if (typeof fullName !== 'string' || fullName.trim().length === 0) {
+      toast.error('Por favor, introduce un nombre completo válido.');
+      return;
+    }
+    try {
+      await updateUser({ fullName: fullName.trim() });
+      await reloadSession();
+      toast.success('Perfil actualizado correctamente.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleLogout() {

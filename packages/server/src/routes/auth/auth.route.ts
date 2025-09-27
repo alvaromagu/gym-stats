@@ -82,14 +82,6 @@ export const register = (router: Router): void => {
     },
   );
 
-  router.get(
-    '/auth/me',
-    authMiddleware,
-    async (req: Request, res: Response) => {
-      res.status(httpStatus.OK).json(req.user);
-    },
-  );
-
   router.post(
     '/auth/logout',
     authMiddleware,
@@ -99,6 +91,45 @@ export const register = (router: Router): void => {
       if (token != null) {
         await sessionCloser.execute({ token });
       }
+      res.status(httpStatus.NO_CONTENT).send();
+    },
+  );
+
+  router.get(
+    '/auth/me',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      if (req.user == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const userFinder = container.get('userFinder');
+      const user = await userFinder.execute({ id: req.user.userId });
+      res.status(httpStatus.OK).json(user);
+    },
+  );
+
+  const updateUserSchema = [
+    body('fullName')
+      .optional()
+      .isString()
+      .notEmpty({ ignore_whitespace: true }),
+  ];
+
+  router.patch(
+    '/auth/me',
+    authMiddleware,
+    updateUserSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      if (req.user == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const userUpdater = container.get('userUpdater');
+      const { fullName } = req.body;
+      await userUpdater.execute({
+        id: req.user.userId,
+        fullName,
+      });
       res.status(httpStatus.NO_CONTENT).send();
     },
   );
