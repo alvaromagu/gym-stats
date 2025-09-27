@@ -32,6 +32,8 @@ export default defineConfig(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/consistent-type-assertions': 'off',
       '@typescript-eslint/max-params': 'off',
+      complexity: 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
     },
   },
   {

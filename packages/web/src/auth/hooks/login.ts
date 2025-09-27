@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { generateAuthOptions } from '../services/generate-auth-options';
 import { startAuthentication } from '@simplewebauthn/browser';
 import { verifyAuth } from '../services/verify-auth';
+import { tokenKey } from '@/shared/constants/session-keys';
 
 export function useLogin() {
   const [loading, setLoading] = useState(false);
@@ -26,8 +27,9 @@ export function useLogin() {
         async (authResponse) =>
           await verifyAuth({ email: emailTrimmed, authResponse }),
       )
-      .then(({ verified }) => {
-        if (verified) {
+      .then((res) => {
+        if (res.verified) {
+          sessionStorage.setItem(tokenKey, res.token);
           toast.success('¡Su inicio de sesión ha sido verificado!');
         } else {
           toast.error('No se ha podido verificar su inicio de sesión.');

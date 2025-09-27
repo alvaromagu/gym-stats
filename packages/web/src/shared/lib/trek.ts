@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { toast } from 'sonner';
 import { ApiError } from '@/shared/errors/api-error';
 import { TrekError } from '@/shared/errors/trek-error';
+import { tokenKey } from '../constants/session-keys';
 
 interface RequestOptions extends RequestInit {
   // Allows consumers to pass any standard fetch options
@@ -67,14 +67,22 @@ function trekErrorHandler(err: TrekError | ApiError): never {
   throw err;
 }
 
+function getHeaders({ includeContent } = { includeContent: true }): Headers {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  const token = sessionStorage.getItem(tokenKey);
+  if (token != null) {
+    headers.append('Authorization', `Bearer ${token}`);
+  }
+  return headers;
+}
+
 async function post<T = unknown>(url: string, body: unknown): Promise<T> {
   try {
     const res = await trekFetch(apiUrl(url), {
       method: 'POST',
       body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getHeaders(),
     });
     return (await res.json()) as T;
   } catch (error: unknown) {
@@ -84,7 +92,10 @@ async function post<T = unknown>(url: string, body: unknown): Promise<T> {
 
 async function get<T>(url: string): Promise<T> {
   try {
-    const res = await trekFetch(apiUrl(url));
+    const res = await trekFetch(apiUrl(url), {
+      method: 'GET',
+      headers: getHeaders({ includeContent: false }),
+    });
     return (await res.json()) as T;
   } catch (error: unknown) {
     trekErrorHandler(error as TrekError | ApiError);
@@ -95,6 +106,7 @@ async function trekDelete<T>(url: string): Promise<T> {
   try {
     const res = await trekFetch(apiUrl(url), {
       method: 'DELETE',
+      headers: getHeaders({ includeContent: false }),
     });
     return (await res.json()) as T;
   } catch (error: unknown) {
@@ -107,9 +119,7 @@ async function put<T>(url: string, body: unknown): Promise<T> {
     const res = await trekFetch(apiUrl(url), {
       method: 'PUT',
       body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getHeaders(),
     });
     return (await res.json()) as T;
   } catch (error: unknown) {
@@ -122,9 +132,7 @@ async function patch<T>(url: string, body: unknown): Promise<T> {
     const res = await trekFetch(apiUrl(url), {
       method: 'PATCH',
       body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getHeaders(),
     });
     return (await res.json()) as T;
   } catch (error: unknown) {

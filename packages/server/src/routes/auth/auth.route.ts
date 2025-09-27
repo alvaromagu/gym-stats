@@ -3,6 +3,7 @@ import type { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
 import { validateReqSchema } from '..';
 import { container } from '@/di';
+import { createAuthMiddleware } from './middlewares';
 
 export const register = (router: Router): void => {
   const registerSchema = [
@@ -78,6 +79,14 @@ export const register = (router: Router): void => {
         authResponse,
       });
       res.status(httpStatus.OK).json(result);
+    },
+  );
+
+  router.get(
+    '/auth/me',
+    createAuthMiddleware,
+    async (req: Request, res: Response) => {
+      res.status(httpStatus.OK).json(req.user);
     },
   );
 };
