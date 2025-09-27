@@ -3,9 +3,11 @@ import { toast } from 'sonner';
 import { register } from '@/auth/services/register';
 import { startRegistration } from '@simplewebauthn/browser';
 import { verifyRegistration } from '../services/verify-registration';
+import { useLocation } from 'wouter';
 
 export function useRegister() {
   const [loading, setLoading] = useState(false);
+  const [, setLocation] = useLocation();
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -39,6 +41,16 @@ export function useRegister() {
             registrationResponse,
           }),
       )
+      .then(({ verified }) => {
+        if (verified) {
+          toast.success(
+            '¡El proceso de registro ha sido completado correctamente!',
+          );
+          setLocation('/login');
+        } else {
+          toast.error('No se ha podido verificar su registro.');
+        }
+      })
       .finally(() => {
         setLoading(false);
       });
