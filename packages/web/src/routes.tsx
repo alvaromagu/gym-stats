@@ -1,100 +1,62 @@
-import { lazy } from 'react';
-import { Switch, Route, Link, Redirect } from 'wouter';
+import { Switch, Link } from 'wouter';
 import { Button } from './shared/components/ui/button';
 import { useAuthContext } from './auth/hooks/auth-context';
-import { LucideLoader2 } from 'lucide-react';
-
-const RegisterPage = lazy(
-  async () =>
-    await import('./auth/pages/register').then((mod) => ({
-      default: mod.Register,
-    })),
-);
-
-const LoginPage = lazy(
-  async () =>
-    await import('./auth/pages/login').then((mod) => ({
-      default: mod.LoginPage,
-    })),
-);
-
-const HomePage = lazy(
-  async () =>
-    await import('./dashboard/pages/home').then((mod) => ({
-      default: mod.HomePage,
-    })),
-);
+import { Home, User } from 'lucide-react';
+import { HomePage } from './dashboard/pages/home';
+import { ProfilePage } from './auth/pages/profile';
+import { LoginPage } from './auth/pages/login';
+import { RegisterPage } from './auth/pages/register';
+import { AuthRoute } from './auth/components/auth-route';
 
 export function Routes() {
   const { loading, hasToken, authenticated } = useAuthContext();
-  const showNoAuth = (!loading && !authenticated) || (loading && !hasToken);
   const showAuth = (!loading && authenticated) || (loading && hasToken);
 
   return (
     <>
-      <header className='p-2 sticky border-b top-0 bg-background'>
-        <nav className='flex justify-center'>
-          {showNoAuth && <NoAuthLinks />}
-          {showAuth && <AuthLinks />}
-        </nav>
-      </header>
+      {showAuth ? <AuthHeader /> : <NoAuthHeader />}
       <Switch>
-        {loading ? (
-          <main className='p-2'>
-            <LucideLoader2 className='animate-spin mx-auto' />
-          </main>
-        ) : !authenticated ? (
-          <NoAuthRoutes />
-        ) : (
-          <AuthRoutes />
-        )}
+        <AuthRoute path='/login' component={LoginPage} />
+        <AuthRoute path='/register' component={RegisterPage} />
+        <AuthRoute protected path='/' component={HomePage} />
+        <AuthRoute protected path='/profile' component={ProfilePage} />
       </Switch>
     </>
   );
 }
 
-function NoAuthLinks() {
+function NoAuthHeader() {
   return (
-    <>
-      <Button variant={'link'} asChild>
-        <Link href='/login'>Iniciar sesión</Link>
-      </Button>
-      <Button variant={'link'} asChild>
-        <Link href='/register'>Crear cuenta</Link>
-      </Button>
-    </>
+    <header className='p-2 sticky border-b top-0 bg-background'>
+      <nav className='flex justify-center'>
+        <Button variant={'link'} asChild>
+          <Link href='/login'>Iniciar sesión</Link>
+        </Button>
+        <Button variant={'link'} asChild>
+          <Link href='/register'>Crear cuenta</Link>
+        </Button>
+      </nav>
+    </header>
   );
 }
 
-function AuthLinks() {
-  return (
-    <>
-      <Button variant={'link'} asChild>
-        <Link href='/'>Home</Link>
-      </Button>
-      <Button variant={'link'} asChild>
-        <Link href='/about'>About</Link>
-      </Button>
-    </>
-  );
-}
+function AuthHeader() {
+  const { user } = useAuthContext();
 
-function NoAuthRoutes() {
   return (
-    <Switch>
-      <Route path='/login' component={LoginPage} />
-      <Route path='/register' component={RegisterPage} />
-      <Route component={() => <Redirect to='/login' />} />
-    </Switch>
-  );
-}
-
-function AuthRoutes() {
-  return (
-    <Switch>
-      <Route path='/' component={HomePage} />
-      <Route path='/about' component={() => <div>About</div>} />
-      <Route component={() => <Redirect to='/' />} />
-    </Switch>
+    <header className='p-2 sticky border-b top-0 bg-background flex items-cente justify-between'>
+      <Button variant={'ghost'} size={'icon'} asChild>
+        <Link href='/'>
+          <Home />
+        </Link>
+      </Button>
+      {user != null && (
+        <Button variant={'outline'} asChild>
+          <Link href='/profile'>
+            <User /> {user.fullName}
+          </Link>
+        </Button>
+      )}
+    </header>
   );
 }

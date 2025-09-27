@@ -3,6 +3,7 @@ import { GSApiError } from '@/contexts/shared/domain/error';
 import { container } from '@/di';
 import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { getToken } from '..';
 
 export interface AuthenticatedRequest extends Request {
   userId: string;
@@ -10,24 +11,20 @@ export interface AuthenticatedRequest extends Request {
   fullName: string;
 }
 
-export async function createAuthMiddleware(
+export async function authMiddleware(
   req: Request,
   _: Response,
   next: NextFunction,
 ) {
   const config = container.get('config');
   const tokenRepository = container.get('tokenRepository');
-
-  const authHeader = req.headers.authorization;
-
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!authHeader?.startsWith('Bearer ')) {
+  const token = getToken(req);
+  if (token == null) {
     throw new GSApiError(
       'Unauthorized: Missing or invalid Authorization header.',
       401,
     );
   }
-  const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, config.jwtSecret, {
       issuer: config.rpID,

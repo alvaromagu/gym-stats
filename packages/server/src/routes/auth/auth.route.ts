@@ -1,9 +1,9 @@
 import httpStatus from 'http-status';
 import type { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
-import { validateReqSchema } from '..';
+import { getToken, validateReqSchema } from '..';
 import { container } from '@/di';
-import { createAuthMiddleware } from './middlewares';
+import { authMiddleware } from './middlewares';
 
 export const register = (router: Router): void => {
   const registerSchema = [
@@ -84,9 +84,22 @@ export const register = (router: Router): void => {
 
   router.get(
     '/auth/me',
-    createAuthMiddleware,
+    authMiddleware,
     async (req: Request, res: Response) => {
       res.status(httpStatus.OK).json(req.user);
+    },
+  );
+
+  router.post(
+    '/auth/logout',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      const sessionCloser = container.get('sessionCloser');
+      const token = getToken(req);
+      if (token != null) {
+        await sessionCloser.execute({ token });
+      }
+      res.status(httpStatus.NO_CONTENT).send();
     },
   );
 };

@@ -8,6 +8,9 @@ export const AuthContext = createContext<AuthContextState>({
   hasToken: false,
   authenticated: false,
   user: undefined,
+  reloadSession: async () => {
+    throw new Error('reloadSession not implemented');
+  },
 });
 
 export function useAuthContext() {
@@ -16,7 +19,7 @@ export function useAuthContext() {
 }
 
 export function useAuthUser() {
-  const context = useContext(AuthContext);
+  const context = useAuthContext();
   if (context.user == null) {
     throw new Error('useAuthUser must be used in a protected route');
   }

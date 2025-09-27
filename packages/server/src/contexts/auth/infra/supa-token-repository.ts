@@ -56,4 +56,14 @@ export class SupaTokenRepository
       throw error;
     }
   }
+
+  async deleteByHash(hashedToken: string): Promise<void> {
+    const { error } = await this.client
+      .from('tokens')
+      .delete()
+      .eq('hash', hashedToken);
+    if (error != null) {
+      throw error;
+    }
+  }
 }

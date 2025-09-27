@@ -9,45 +9,64 @@ export type AuthState =
       hasToken: boolean;
       authenticated: false;
       user: undefined;
+      reloadSession: () => Promise<void>;
     }
   | {
       loading: boolean;
       hasToken: boolean;
       authenticated: true;
       user: User;
+      reloadSession: () => Promise<void>;
     };
 
+export interface AuthInternalState {
+  loading: boolean;
+  user: User | undefined;
+}
+
 export function useAuth(): AuthState {
-  const hasToken = sessionStorage.getItem(tokenKey) != null;
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const [authState, setAuthState] = useState<AuthInternalState>({
+    loading: true,
+    user: undefined,
+  });
+
+  async function getUser() {
+    const token = sessionStorage.getItem(tokenKey);
+    if (token == null) {
+      return { user: undefined };
+    }
+    const user = await getAuthUserInfo().catch(() => undefined);
+    return { user };
+  }
+
+  async function reloadSession() {
+    const { user } = await getUser();
+    setAuthState({ loading: false, user });
+  }
 
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
     void (async () => {
-      if (!isMounted) {
+      if (!mounted) {
         return;
       }
-      const user = await getAuthUserInfo().catch(() => undefined);
-      if (!isMounted) {
+      const { user } = await getUser();
+      if (!mounted) {
         return;
       }
-      setUser(user);
-      setLoading(false);
+      setAuthState({ loading: false, user });
     })();
+
     return () => {
-      isMounted = false;
+      mounted = false;
     };
   }, []);
 
-  if (user == null) {
-    return { loading, hasToken, authenticated: false, user: undefined };
-  }
-
   return {
-    loading,
-    hasToken,
-    authenticated: true,
-    user,
-  };
+    loading: authState.loading,
+    hasToken: sessionStorage.getItem(tokenKey) != null,
+    authenticated: authState.user != null,
+    user: authState.user,
+    reloadSession,
+  } as AuthState;
 }

@@ -82,3 +82,11 @@ export function routeLogger(
   logger.info(`[${req.method}] ${req.originalUrl}`);
   next();
 }
+
+export function getToken(req: Request): string | null {
+  const authHeader = req.headers.authorization;
+  if (!(authHeader?.startsWith('Bearer ') ?? false)) {
+    return null;
+  }
+  return authHeader?.split(' ')[1] ?? null;
+}

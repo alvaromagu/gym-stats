@@ -4,7 +4,7 @@ import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { useRegister } from '@/auth/hooks/register';
 
-export function Register() {
+export function RegisterPage() {
   const { loading, handleSubmit } = useRegister();
 
   return (
