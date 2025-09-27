@@ -4,7 +4,7 @@ import type * as http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import type { Logger } from '@shared/domain/logger';
 import type { Config } from '@shared/domain/config';
-import { catchErrors, registerRoutes, routeLogger } from './routes';
+import { catchErrors, registerRoutes, routeLogger } from './routes/index';
 
 export class Server {
   private readonly express = express();
