@@ -44,4 +44,40 @@ export const register = (router: Router): void => {
       res.status(httpStatus.OK).json(result);
     },
   );
+
+  const authOptsSchema = [
+    body('email').exists().isString().notEmpty({ ignore_whitespace: true }),
+  ];
+  const authOptsCreator = container.get('authOptsCreator');
+
+  router.post(
+    '/auth/generate-authentication-options',
+    authOptsSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const { email } = req.body;
+      const options = await authOptsCreator.execute({ email });
+      res.status(httpStatus.OK).json(options);
+    },
+  );
+
+  const authVerifySchema = [
+    body('email').exists().isString().notEmpty({ ignore_whitespace: true }),
+    body('authResponse').exists().isObject(),
+  ];
+  const authVerifier = container.get('authVerifier');
+
+  router.post(
+    '/auth/verify-authentication',
+    authVerifySchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const { email, authResponse } = req.body;
+      const result = await authVerifier.execute({
+        email,
+        authResponse,
+      });
+      res.status(httpStatus.OK).json(result);
+    },
+  );
 };

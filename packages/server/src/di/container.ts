@@ -18,6 +18,8 @@ import type { Logger } from '@/contexts/shared/domain/logger';
 import type { Config } from '@/contexts/shared/domain/config';
 import { UserCreator } from '@/contexts/auth/app/user-creator';
 import { UserRegistrationVerifier } from '@/contexts/auth/app/user-registration-verifier';
+import { AuthVerifier } from '@/contexts/auth/app/auth-verifier';
+import { AuthOptsCreator } from '@/contexts/auth/app/auth-opts-creator';
 
 interface Dependencies {
   logger: Logger;
@@ -27,6 +29,8 @@ interface Dependencies {
   userRepository: UserRepository;
   userCreator: UserCreator;
   userRegistrationVerifier: UserRegistrationVerifier;
+  authOptsCreator: AuthOptsCreator;
+  authVerifier: AuthVerifier;
 }
 
 export class Container {
@@ -46,6 +50,8 @@ export class Container {
       userRepository: asClass<UserRepository>(SupaUserRepository).singleton(),
       userCreator: asClass(UserCreator).singleton(),
       userRegistrationVerifier: asClass(UserRegistrationVerifier).singleton(),
+      authOptsCreator: asClass(AuthOptsCreator).singleton(),
+      authVerifier: asClass(AuthVerifier).singleton(),
     });
   }
 
