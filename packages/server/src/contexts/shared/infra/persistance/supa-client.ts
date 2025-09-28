@@ -1,5 +1,5 @@
-import type { Config } from '@shared/domain/config';
-import type { Database } from '@shared/infra/persistance/supabase';
+import type { Config } from '../../domain/config.js';
+import type { Database } from './supabase.js';
 import { createClient } from '@supabase/supabase-js';
 
 export type SupaClient = ReturnType<typeof createClient<Database>>;

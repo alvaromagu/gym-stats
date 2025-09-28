@@ -1,4 +1,4 @@
-import { Aggregate } from '@shared/domain/aggregate';
+import { Aggregate } from '../../shared/domain/aggregate.js';
 import type { WebAuthnCredential } from '@simplewebauthn/server';
 
 function validateId(id: unknown): void {

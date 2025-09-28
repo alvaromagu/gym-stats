@@ -1,12 +1,12 @@
-import { GSApiError } from '@/contexts/shared/domain/error';
-import { User } from '../domain/user';
-import type { UserRepository } from '../domain/user-repository';
+import { GSApiError } from '../../shared/domain/error.js';
+import { User } from '../domain/user.js';
+import type { UserRepository } from '../domain/user-repository.js';
 import {
   generateAuthenticationOptions,
   type GenerateAuthenticationOptionsOpts,
   type PublicKeyCredentialRequestOptionsJSON,
 } from '@simplewebauthn/server';
-import type { Config } from '@/contexts/shared/domain/config';
+import type { Config } from '../../shared/domain/config.js';
 
 export class AuthOptsCreator {
   constructor(

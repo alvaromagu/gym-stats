@@ -1,5 +1,3 @@
-import { ConsoleLogger } from '@shared/infra/console-logger';
-import { config } from '@shared/infra/config-loader';
 import {
   createContainer,
   type AwilixContainer,
@@ -7,24 +5,26 @@ import {
   asClass,
   asValue,
 } from 'awilix';
-import { Server } from '@/server';
+import { Server } from '../server.js';
+import { ConsoleLogger } from '../contexts/shared/infra/console-logger.js';
+import { config } from '../contexts/shared/infra/config-loader.js';
 import {
   createSupaClient,
   type SupaClient,
-} from '@shared/infra/persistance/supa-client';
-import type { UserRepository } from '@auth/domain/user-repository';
-import { SupaUserRepository } from '@auth/infra/supa-user-repository';
-import type { Logger } from '@/contexts/shared/domain/logger';
-import type { Config } from '@/contexts/shared/domain/config';
-import { UserCreator } from '@/contexts/auth/app/user-creator';
-import { UserRegistrationVerifier } from '@/contexts/auth/app/user-registration-verifier';
-import { AuthVerifier } from '@/contexts/auth/app/auth-verifier';
-import { AuthOptsCreator } from '@/contexts/auth/app/auth-opts-creator';
-import type { TokenRepository } from '@/contexts/auth/domain/token-repository';
-import { SupaTokenRepository } from '@/contexts/auth/infra/supa-token-repository';
-import { SessionCloser } from '@/contexts/auth/app/session-closer';
-import { UserUpdater } from '@/contexts/auth/app/user-updater';
-import { UserFinder } from '@/contexts/auth/app/user-finder';
+} from '../contexts/shared/infra/persistance/supa-client.js';
+import type { UserRepository } from '../contexts/auth/domain/user-repository.js';
+import { SupaUserRepository } from '../contexts/auth/infra/supa-user-repository.js';
+import type { Logger } from '../contexts/shared/domain/logger.js';
+import type { Config } from '../contexts/shared/domain/config.js';
+import { UserCreator } from '../contexts/auth/app/user-creator.js';
+import { UserRegistrationVerifier } from '../contexts/auth/app/user-registration-verifier.js';
+import { AuthVerifier } from '../contexts/auth/app/auth-verifier.js';
+import { AuthOptsCreator } from '../contexts/auth/app/auth-opts-creator.js';
+import type { TokenRepository } from '../contexts/auth/domain/token-repository.js';
+import { SupaTokenRepository } from '../contexts/auth/infra/supa-token-repository.js';
+import { SessionCloser } from '../contexts/auth/app/session-closer.js';
+import { UserUpdater } from '../contexts/auth/app/user-updater.js';
+import { UserFinder } from '../contexts/auth/app/user-finder.js';
 
 interface Dependencies {
   logger: Logger;

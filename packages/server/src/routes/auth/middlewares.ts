@@ -1,9 +1,9 @@
-import { hashToken } from '@/contexts/auth/app/hash-token';
-import { GSApiError } from '@/contexts/shared/domain/error';
-import { container } from '@/di';
 import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { getToken } from '..';
+import { hashToken } from '../../contexts/auth/app/hash-token.js';
+import { GSApiError } from '../../contexts/shared/domain/error.js';
+import { container } from '../../di/index.js';
+import { getToken } from '../index.js';
 
 export interface AuthenticatedRequest extends Request {
   userId: string;

@@ -1,3 +1,3 @@
-import { Container } from '@/di/container';
+import { Container } from './container.js';
 
 export const container = new Container();

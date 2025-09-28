@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import type { Logger } from '@shared/domain/logger.ts';
+import type { Logger } from '../domain/logger.js';
 
 export class ConsoleLogger implements Logger {
   debug(message: unknown, ...optionalParams: unknown[]): void {

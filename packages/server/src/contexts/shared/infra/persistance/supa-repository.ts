@@ -1,4 +1,4 @@
-import type { SupaClient } from '@/contexts/shared/infra/persistance/supa-client';
+import type { SupaClient } from './supa-client.js';
 
 export abstract class SupaRepository {
   protected readonly client: SupaClient;

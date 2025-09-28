@@ -1,5 +1,5 @@
-import { GSApiError } from '@/contexts/shared/domain/error';
-import type { UserRepository } from '../domain/user-repository';
+import { GSApiError } from '../../shared/domain/error.js';
+import type { UserRepository } from '../domain/user-repository.js';
 
 export class UserFinder {
   constructor(private readonly userRepository: UserRepository) {}

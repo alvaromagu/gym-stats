@@ -1,13 +1,13 @@
-import { GSApiError } from '@/contexts/shared/domain/error';
-import type { UserRepository } from '../domain/user-repository';
-import type { Config } from '@/contexts/shared/domain/config';
+import { GSApiError } from '../../shared/domain/error.js';
+import type { UserRepository } from '../domain/user-repository.js';
+import type { Config } from '../../shared/domain/config.js';
 import {
   verifyRegistrationResponse,
   type RegistrationResponseJSON,
   type VerifiedRegistrationResponse,
   type VerifyRegistrationResponseOpts,
 } from '@simplewebauthn/server';
-import { User } from '../domain/user';
+import { User } from '../domain/user.js';
 
 export class UserRegistrationVerifier {
   constructor(

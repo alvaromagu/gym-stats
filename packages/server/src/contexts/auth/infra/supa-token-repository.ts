@@ -1,6 +1,6 @@
-import { SupaRepository } from '@/contexts/shared/infra/persistance/supa-repository';
-import type { TokenRepository } from '../domain/token-repository';
-import { Token } from '../domain/token';
+import { SupaRepository } from '../../shared/infra/persistance/supa-repository.js';
+import type { TokenRepository } from '../domain/token-repository.js';
+import { Token } from '../domain/token.js';
 
 export class SupaTokenRepository
   extends SupaRepository

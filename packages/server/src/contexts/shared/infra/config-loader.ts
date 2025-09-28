@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import type { Config } from '@shared/domain/config.ts';
+import type { Config } from '../domain/config.js';
 
 const DEFAULT_PORT = 8080;
 dotenv.config();

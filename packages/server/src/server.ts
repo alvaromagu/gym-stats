@@ -2,9 +2,9 @@ import express, { Router } from 'express';
 import cors from 'cors';
 import type * as http from 'node:http';
 import type { AddressInfo } from 'node:net';
-import type { Logger } from '@shared/domain/logger';
-import type { Config } from '@shared/domain/config';
-import { catchErrors, registerRoutes, routeLogger } from './routes/index';
+import type { Logger } from './contexts/shared/domain/logger.js';
+import type { Config } from './contexts/shared/domain/config.js';
+import { catchErrors, registerRoutes, routeLogger } from './routes/index.js';
 
 export class Server {
   private readonly express = express();

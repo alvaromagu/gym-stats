@@ -1,4 +1,4 @@
-import { container } from '@/di';
+import { container } from './di/index.js';
 
 container
   .register()

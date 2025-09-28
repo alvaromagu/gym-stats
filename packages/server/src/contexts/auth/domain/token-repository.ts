@@ -1,4 +1,4 @@
-import type { Token } from './token';
+import type { Token } from './token.js';
 
 export interface TokenRepository {
   create: (token: Token) => Promise<void>;

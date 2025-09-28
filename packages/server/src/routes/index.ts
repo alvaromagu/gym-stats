@@ -2,20 +2,21 @@ import type { NextFunction, Router, Request, Response } from 'express';
 import { glob } from 'glob';
 import { validationResult } from 'express-validator';
 import httpStatus from 'http-status';
-import path from 'node:path';
-import { GSApiError, GSError } from '@/contexts/shared/domain/error';
-import { container } from '@/di';
+import { GSApiError, GSError } from '../contexts/shared/domain/error.js';
+
+import { container } from '../di/index.js';
+import { dirname, join } from 'node:path';
+
+const currentModuleDir = dirname(import.meta.url);
 
 export async function registerRoutes(router: Router): Promise<void> {
-  const globPattern =
-    path.dirname('src/routes').replace(/\\/gi, '/') + '/**/*.route.*';
-  const routes = glob.sync(globPattern, {});
+  const baseDir = currentModuleDir;
+  const pattern = '**/*.route.*';
+  const routes = glob.sync(pattern, { cwd: baseDir });
   await Promise.all(
-    routes
-      .map((route) => route.replace(/\\/gi, '/').replace('src/routes/', './'))
-      .map(async (route) => {
-        await register(route, router);
-      }),
+    routes.map(async (route) => {
+      await register(join(baseDir, route), router);
+    }),
   );
 }
 

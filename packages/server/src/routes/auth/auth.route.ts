@@ -1,9 +1,9 @@
 import httpStatus from 'http-status';
 import type { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
-import { getToken, validateReqSchema } from '..';
-import { container } from '@/di';
-import { authMiddleware } from './middlewares';
+import { getToken, validateReqSchema } from '../index.js';
+import { container } from '../../di/index.js';
+import { authMiddleware } from './middlewares.js';
 
 export const register = (router: Router): void => {
   const registerSchema = [

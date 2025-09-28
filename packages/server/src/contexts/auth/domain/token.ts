@@ -1,4 +1,4 @@
-import { Aggregate } from '@/contexts/shared/domain/aggregate';
+import { Aggregate } from '../../shared/domain/aggregate.js';
 
 export class Token extends Aggregate {
   constructor(

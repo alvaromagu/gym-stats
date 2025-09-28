@@ -1,16 +1,16 @@
-import type { UserRepository } from '../domain/user-repository';
-import type { Config } from '@/contexts/shared/domain/config';
-import { GSApiError } from '@/contexts/shared/domain/error';
+import type { UserRepository } from '../domain/user-repository.js';
+import type { Config } from '../../shared/domain/config.js';
+import { GSApiError } from '../../../contexts/shared/domain/error.js';
 import {
   verifyAuthenticationResponse,
   type AuthenticationResponseJSON,
   type VerifiedAuthenticationResponse,
 } from '@simplewebauthn/server';
-import { User } from '../domain/user';
+import { User } from '../domain/user.js';
 import jwt, { type SignOptions } from 'jsonwebtoken';
-import { Token } from '../domain/token';
-import { hashToken } from './hash-token';
-import type { TokenRepository } from '../domain/token-repository';
+import { Token } from '../domain/token.js';
+import { hashToken } from './hash-token.js';
+import type { TokenRepository } from '../domain/token-repository.js';
 
 type AuthVerifierResponse =
   | {
@@ -44,7 +44,7 @@ export class AuthVerifier {
       throw new GSApiError('No authentication challenge found', 400);
     }
     const credential = user.credentials.find(
-      (cred) => cred.id === authResponse.id,
+      (cred: { id: string }) => cred.id === authResponse.id,
     );
     if (credential == null) {
       throw new GSApiError(

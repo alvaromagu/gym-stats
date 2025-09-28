@@ -1,12 +1,12 @@
-import { GSError } from '@/contexts/shared/domain/error';
-import { User } from '../domain/user';
-import type { UserRepository } from '../domain/user-repository';
+import { GSError } from '../../shared/domain/error.js';
+import { User } from '../domain/user.js';
+import type { UserRepository } from '../domain/user-repository.js';
 import {
   generateRegistrationOptions,
   type GenerateRegistrationOptionsOpts,
   type PublicKeyCredentialCreationOptionsJSON,
 } from '@simplewebauthn/server';
-import type { Config } from '@/contexts/shared/domain/config';
+import type { Config } from '../../shared/domain/config.js';
 
 export class UserCreator {
   constructor(

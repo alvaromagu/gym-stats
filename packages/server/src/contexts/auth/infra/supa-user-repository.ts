@@ -1,6 +1,6 @@
-import { SupaRepository } from '@shared/infra/persistance/supa-repository';
-import { User } from '@auth/domain/user';
-import type { UserRepository } from '@auth/domain/user-repository';
+import { SupaRepository } from '../../shared/infra/persistance/supa-repository.js';
+import { User } from '../domain/user.js';
+import type { UserRepository } from '../domain/user-repository.js';
 import type { WebAuthnCredential } from '@simplewebauthn/server';
 
 export class SupaUserRepository

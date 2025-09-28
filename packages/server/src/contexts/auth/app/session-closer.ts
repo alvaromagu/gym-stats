@@ -1,7 +1,7 @@
-import type { Config } from '@/contexts/shared/domain/config';
-import type { TokenRepository } from '../domain/token-repository';
-import type { UserRepository } from '../domain/user-repository';
-import { hashToken } from './hash-token';
+import type { Config } from '../../shared/domain/config.js';
+import type { TokenRepository } from '../domain/token-repository.js';
+import type { UserRepository } from '../domain/user-repository.js';
+import { hashToken } from './hash-token.js';
 
 export class SessionCloser {
   constructor(
