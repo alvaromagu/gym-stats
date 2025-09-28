@@ -31,6 +31,7 @@ async function register(routePath: string, router: Router): Promise<void> {
     );
     return;
   }
+  logger.info(`registering route ${routePath}`);
   route.register(router);
 }
 
