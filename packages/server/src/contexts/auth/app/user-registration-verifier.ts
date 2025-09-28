@@ -8,6 +8,7 @@ import {
   type VerifyRegistrationResponseOpts,
 } from '@simplewebauthn/server';
 import { User } from '../domain/user.js';
+import { Credential } from '../domain/credential.js';
 
 export class UserRegistrationVerifier {
   constructor(
@@ -18,9 +19,11 @@ export class UserRegistrationVerifier {
   async execute({
     email,
     registrationResponse,
+    deviceName,
   }: {
     email: string;
     registrationResponse: RegistrationResponseJSON;
+    deviceName: string;
   }): Promise<{
     verified: boolean;
   }> {
@@ -52,6 +55,13 @@ export class UserRegistrationVerifier {
     const { verified, registrationInfo } = verification;
     if (verified) {
       const { credential } = registrationInfo;
+      const domainCredential = new Credential(
+        credential.id,
+        credential.publicKey,
+        credential.counter,
+        deviceName,
+        credential.transports,
+      );
       const existingCredential = user.credentials.find(
         (c) => c.id === credential.id,
       );
@@ -60,7 +70,7 @@ export class UserRegistrationVerifier {
           user.id,
           user.email,
           user.fullName,
-          [...user.credentials, credential],
+          [...user.credentials, domainCredential],
           null, // Clear the current challenge
         );
         await this.userRepository.update(updatedUser);

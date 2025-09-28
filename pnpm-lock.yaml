@@ -74,6 +74,9 @@ importers:
       express:
         specifier: 5.1.0
         version: 5.1.0
+      express-useragent:
+        specifier: 1.0.15
+        version: 1.0.15
       express-validator:
         specifier: 7.2.1
         version: 7.2.1
@@ -93,6 +96,9 @@ importers:
       '@types/express':
         specifier: 5.0.3
         version: 5.0.3
+      '@types/express-useragent':
+        specifier: 1.0.5
+        version: 1.0.5
       '@types/jsonwebtoken':
         specifier: 9.0.10
         version: 9.0.10
@@ -1563,6 +1569,12 @@ packages:
     resolution:
       {
         integrity: sha512-R+33OsgWw7rOhD1emjU7dzCDHucJrgJXMA5PYCzJxVil0dsyx5iBEPHqpPfiKNJQb7lZ1vxwoLR4Z87bBUpeGQ==,
+      }
+
+  '@types/express-useragent@1.0.5':
+    resolution:
+      {
+        integrity: sha512-G1zPW6jDj7oGJvMvB8UCIAWznCOafcksYzOg8LINfYmvrXlSGJ6nsJ7O7GlmYMjrgGYvobYaI8IhRCkAKslPJA==,
       }
 
   '@types/express@5.0.3':
@@ -3132,6 +3144,13 @@ packages:
       {
         integrity: sha512-blk1va0zol9QOrdZt0rFXo5KMkNPVSp92Eju/Qz8THwKWKRKeE0T8Br/1aW6+Edkyq9xHYgYxn2QtOnUKPUp+Q==,
       }
+
+  express-useragent@1.0.15:
+    resolution:
+      {
+        integrity: sha512-eq5xMiYCYwFPoekffMjvEIk+NWdlQY9Y38OsTyl13IvA728vKT+q/CSERYWzcw93HGBJcIqMIsZC5CZGARPVdg==,
+      }
+    engines: { node: '>=4.5' }
 
   express-validator@7.2.1:
     resolution:
@@ -6704,6 +6723,10 @@ snapshots:
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.5
 
+  '@types/express-useragent@1.0.5':
+    dependencies:
+      '@types/express': 5.0.3
+
   '@types/express@5.0.3':
     dependencies:
       '@types/body-parser': 1.19.6
@@ -7855,6 +7878,8 @@ snapshots:
   eventemitter3@5.0.1: {}
 
   events-intercept@2.0.0: {}
+
+  express-useragent@1.0.15: {}
 
   express-validator@7.2.1:
     dependencies:

@@ -1,3 +1,7 @@
+import type {
+  ISODateTime,
+  Primitives,
+} from '@/contexts/shared/domain/primitives.js';
 import { Aggregate } from '../../shared/domain/aggregate.js';
 
 export class Token extends Aggregate {
@@ -11,13 +15,13 @@ export class Token extends Aggregate {
     super();
   }
 
-  toPrimitives(): Record<string, unknown> {
+  toPrimitives(): Primitives<Token> {
     return {
       id: this.id,
       userId: this.userId,
       hash: this.hash,
-      expiresAt: this.expiresAt,
-      createdAt: this.createdAt,
+      expiresAt: this.expiresAt.toISOString() as ISODateTime,
+      createdAt: this.createdAt.toISOString() as ISODateTime,
     };
   }
 }

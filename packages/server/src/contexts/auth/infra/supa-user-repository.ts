@@ -1,7 +1,9 @@
 import { SupaRepository } from '../../shared/infra/persistance/supa-repository.js';
 import { User } from '../domain/user.js';
 import type { UserRepository } from '../domain/user-repository.js';
-import type { WebAuthnCredential } from '@simplewebauthn/server';
+import { Credential } from '../domain/credential.js';
+import type { Json } from '@/contexts/shared/infra/persistance/supabase.js';
+import type { AuthenticatorTransportFuture } from '@simplewebauthn/server';
 
 export class SupaUserRepository
   extends SupaRepository
@@ -16,19 +18,7 @@ export class SupaUserRepository
     if (error != null) {
       return null;
     }
-    return new User(
-      data.id,
-      data.email,
-      data.full_name,
-      (data.credentials as any[]).map(
-        (cred) =>
-          ({
-            ...cred,
-            publicKey: Buffer.from(cred.publicKey as string, 'base64'),
-          }) as WebAuthnCredential,
-      ),
-      data.current_challenge,
-    );
+    return this.mapToDomain(data);
   }
 
   async findById(id: string): Promise<User | null> {
@@ -40,49 +30,27 @@ export class SupaUserRepository
     if (error != null) {
       return null;
     }
-    return new User(
-      data.id,
-      data.email,
-      data.full_name,
-      (data.credentials as any[]).map(
-        (cred) =>
-          ({
-            ...cred,
-            publicKey: Buffer.from(cred.publicKey as string, 'base64'),
-          }) as WebAuthnCredential,
-      ),
-      data.current_challenge,
-    );
+    return this.mapToDomain(data);
   }
 
   async create(user: User): Promise<void> {
-    const { error } = await this.client.from('users').insert({
-      id: user.id,
-      email: user.email,
-      full_name: user.fullName,
-      credentials: user.credentials.map((cred) => ({
-        ...cred,
-        publicKey: Buffer.from(cred.publicKey).toString('base64'),
-      })),
-      current_challenge: user.currentChallenge,
-    });
+    const { error } = await this.client
+      .from('users')
+      .insert(this.mapToDb(user));
     if (error != null) {
       throw error;
     }
   }
 
   async update(user: User): Promise<void> {
+    const dbObject = this.mapToDb(user);
+    const updateData = {
+      ...dbObject,
+      id: undefined,
+    };
     const { error } = await this.client
       .from('users')
-      .update({
-        email: user.email,
-        full_name: user.fullName,
-        credentials: user.credentials.map((cred) => ({
-          ...cred,
-          publicKey: Buffer.from(cred.publicKey).toString('base64'),
-        })),
-        current_challenge: user.currentChallenge,
-      })
+      .update(updateData)
       .eq('id', user.id);
     if (error != null) {
       throw error;
@@ -94,5 +62,41 @@ export class SupaUserRepository
     if (error != null) {
       throw error;
     }
+  }
+
+  private mapToDomain(user: {
+    credentials: Json;
+    current_challenge: string | null;
+    email: string;
+    full_name: string;
+    id: string;
+  }): User {
+    return new User(
+      user.id,
+      user.email,
+      user.full_name,
+      (user.credentials as any[]).map(
+        (cred) =>
+          new Credential(
+            cred.id as string,
+            Buffer.from(cred.publicKey as string, 'base64'),
+            cred.counter as number,
+            cred.deviceName as string,
+            cred.transports as AuthenticatorTransportFuture[],
+          ),
+      ) ?? [],
+      user.current_challenge,
+    );
+  }
+
+  private mapToDb(user: User) {
+    const primitives = user.toPrimitives();
+    return {
+      id: primitives.id,
+      email: primitives.email,
+      full_name: primitives.fullName,
+      credentials: primitives.credentials,
+      current_challenge: user.currentChallenge,
+    };
   }
 }

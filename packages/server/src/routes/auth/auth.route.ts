@@ -40,9 +40,11 @@ export const registerAuthRoutes = (router: Router): void => {
       );
 
       const { email, registrationResponse } = req.body;
+      const deviceName = req.useragent?.os ?? 'unknown';
       const result = await userRegistrationVerifier.execute({
         email,
         registrationResponse,
+        deviceName,
       });
       res.status(httpStatus.OK).json(result);
     },

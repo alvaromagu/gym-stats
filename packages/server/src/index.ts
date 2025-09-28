@@ -4,6 +4,7 @@ import cors from 'cors';
 import { container } from './di/index.js';
 import { registerAuthRoutes } from './routes/auth/auth.route.js';
 import type { AddressInfo } from 'node:net';
+import useragent from 'express-useragent';
 
 const expressApp = express();
 const router = Router();
@@ -17,6 +18,7 @@ expressApp.use(
 );
 
 expressApp.use(express.json());
+expressApp.use(useragent.express());
 
 const containerPromise = container
   .register()
@@ -38,7 +40,7 @@ registerAuthRoutes(router);
 expressApp.use(router);
 expressApp.use(catchErrors);
 
-const http = expressApp.listen(process.env.PORT ?? 8080, () => {
+const http = expressApp.listen(process.env.PORT ?? 3000, () => {
   const { port } = http.address() as AddressInfo;
   console.log(`🚀 Application running on http://localhost:${port}`);
 });

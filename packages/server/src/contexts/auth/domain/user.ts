@@ -1,5 +1,6 @@
+import type { Primitives } from '@/contexts/shared/domain/primitives.js';
 import { Aggregate } from '../../shared/domain/aggregate.js';
-import type { WebAuthnCredential } from '@simplewebauthn/server';
+import type { Credential } from './credential.js';
 
 function validateId(id: unknown): void {
   if (typeof id !== 'string') {
@@ -35,7 +36,7 @@ export class User extends Aggregate {
     public readonly id: string,
     public readonly email: string,
     public readonly fullName: string,
-    public readonly credentials: WebAuthnCredential[],
+    public readonly credentials: Credential[],
     public readonly currentChallenge: string | null,
   ) {
     super();
@@ -44,12 +45,15 @@ export class User extends Aggregate {
     validateFullName(fullName);
   }
 
-  toPrimitives(): Record<string, unknown> {
+  toPrimitives(): Primitives<User> {
     return {
       id: this.id,
       email: this.email,
       fullName: this.fullName,
-      credentials: this.credentials,
+      credentials: this.credentials.map((credential) =>
+        credential.toPrimitives(),
+      ),
+      currentChallenge: this.currentChallenge,
     };
   }
 }

@@ -11,6 +11,7 @@ import jwt, { type SignOptions } from 'jsonwebtoken';
 import { Token } from '../domain/token.js';
 import { hashToken } from './hash-token.js';
 import type { TokenRepository } from '../domain/token-repository.js';
+import { Credential } from '../domain/credential.js';
 
 type AuthVerifierResponse =
   | {
@@ -59,7 +60,12 @@ export class AuthVerifier {
         expectedChallenge: user.currentChallenge,
         expectedOrigin: this.config.origins,
         expectedRPID: this.config.rpID,
-        credential,
+        credential: {
+          id: credential.id,
+          publicKey: credential.publicKey,
+          counter: credential.counter,
+          transports: credential.transports,
+        },
         requireUserVerification: false,
       };
       verification = await verifyAuthenticationResponse(opts);
@@ -72,10 +78,13 @@ export class AuthVerifier {
     }
     const { verified, authenticationInfo } = verification;
     if (verified) {
-      const updatedCredential = {
-        ...credential,
-        counter: authenticationInfo.newCounter,
-      };
+      const updatedCredential = new Credential(
+        credential.id,
+        credential.publicKey,
+        authenticationInfo.newCounter,
+        credential.deviceName,
+        credential.transports,
+      );
       const updatedUser = new User(
         user.id,
         user.email,
