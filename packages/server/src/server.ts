@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express, { Router, type Express } from 'express';
 import cors from 'cors';
 import type * as http from 'node:http';
 import type { AddressInfo } from 'node:net';
@@ -7,30 +7,29 @@ import type { Config } from './contexts/shared/domain/config.js';
 import { catchErrors, registerRoutes, routeLogger } from './routes/index.js';
 
 export class Server {
-  private readonly express = express();
-  private readonly router = Router();
   http!: http.Server;
 
   constructor(
     private readonly config: Config,
     private readonly logger: Logger,
-  ) {
-    this.express.use(
+  ) {}
+
+  async start(expressApp: Express): Promise<void> {
+    const router = Router();
+    expressApp.use(
       cors({
         origin: this.config.origins,
       }),
     );
-    this.express.use(express.json());
-    this.express.use(routeLogger);
-    this.express.use(this.router);
-    this.express.use(catchErrors);
-  }
+    expressApp.use(express.json());
+    expressApp.use(routeLogger);
+    expressApp.use(router);
+    expressApp.use(catchErrors);
 
-  async start(): Promise<void> {
-    await registerRoutes(this.router);
+    await registerRoutes(router);
     // eslint-disable-next-line promise/avoid-new
     await new Promise<void>((resolve) => {
-      this.http = this.express.listen(this.config.port, () => {
+      this.http = expressApp.listen(this.config.port, () => {
         const { port } = this.http.address() as AddressInfo;
         this.logger.info(`🚀 Application running on http://localhost:${port}`);
         resolve();
