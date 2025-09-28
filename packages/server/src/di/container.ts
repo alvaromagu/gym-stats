@@ -5,7 +5,6 @@ import {
   asClass,
   asValue,
 } from 'awilix';
-import { Server } from '../server.js';
 import { ConsoleLogger } from '../contexts/shared/infra/console-logger.js';
 import { config } from '../contexts/shared/infra/config-loader.js';
 import {
@@ -29,7 +28,6 @@ import { UserFinder } from '../contexts/auth/app/user-finder.js';
 interface Dependencies {
   logger: Logger;
   config: Config;
-  server: Server;
   supaClient: SupaClient;
   userRepository: UserRepository;
   tokenRepository: TokenRepository;
@@ -54,7 +52,6 @@ export class Container {
     this.container.register({
       logger: asClass(ConsoleLogger).singleton(),
       config: asValue(config),
-      server: asClass(Server).singleton(),
       supaClient: asValue(supaClient),
       userRepository: asClass<UserRepository>(SupaUserRepository).singleton(),
       tokenRepository:

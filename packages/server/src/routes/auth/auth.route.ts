@@ -5,19 +5,18 @@ import { getToken, validateReqSchema } from '../index.js';
 import { container } from '../../di/index.js';
 import { authMiddleware } from './middlewares.js';
 
-export const register = (router: Router): void => {
+export const registerAuthRoutes = (router: Router): void => {
   const registerSchema = [
     body('email').exists().isString().notEmpty({ ignore_whitespace: true }),
     body('fullName').exists().isString().notEmpty({ ignore_whitespace: true }),
   ];
-
-  const userCreator = container.get('userCreator');
 
   router.post(
     '/auth/register',
     registerSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
+      const userCreator = container.get('userCreator');
       const optionsJSON = await userCreator.execute({
         email: req.body.email,
         fullName: req.body.fullName,
@@ -30,13 +29,16 @@ export const register = (router: Router): void => {
     body('email').exists().isString().notEmpty({ ignore_whitespace: true }),
     body('registrationResponse').exists().isObject(),
   ];
-  const userRegistrationVerifier = container.get('userRegistrationVerifier');
 
   router.post(
     '/auth/verify-register',
     verifyRegisterSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
+      const userRegistrationVerifier = container.get(
+        'userRegistrationVerifier',
+      );
+
       const { email, registrationResponse } = req.body;
       const result = await userRegistrationVerifier.execute({
         email,
@@ -49,13 +51,13 @@ export const register = (router: Router): void => {
   const authOptsSchema = [
     body('email').exists().isString().notEmpty({ ignore_whitespace: true }),
   ];
-  const authOptsCreator = container.get('authOptsCreator');
 
   router.post(
     '/auth/generate-authentication-options',
     authOptsSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
+      const authOptsCreator = container.get('authOptsCreator');
       const { email } = req.body;
       const options = await authOptsCreator.execute({ email });
       res.status(httpStatus.OK).json(options);
@@ -66,13 +68,14 @@ export const register = (router: Router): void => {
     body('email').exists().isString().notEmpty({ ignore_whitespace: true }),
     body('authResponse').exists().isObject(),
   ];
-  const authVerifier = container.get('authVerifier');
 
   router.post(
     '/auth/verify-authentication',
     authVerifySchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
+      const authVerifier = container.get('authVerifier');
+
       const { email, authResponse } = req.body;
       const result = await authVerifier.execute({
         email,
