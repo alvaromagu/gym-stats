@@ -1,4 +1,4 @@
-import type { Primitives } from '@/contexts/shared/domain/primitives.js';
+import type { Primitives } from '../../../contexts/shared/domain/primitives.js';
 import { Aggregate } from '../../shared/domain/aggregate.js';
 import type { Credential } from './credential.js';
 

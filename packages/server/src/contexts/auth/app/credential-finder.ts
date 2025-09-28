@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import { GSApiError } from '@/contexts/shared/domain/error.js';
+import { GSApiError } from '../../../contexts/shared/domain/error.js';
 import type { UserRepository } from '../domain/user-repository.js';
 
 export class CredentialFinder {

@@ -1,7 +1,7 @@
 import type {
   ISODateTime,
   Primitives,
-} from '@/contexts/shared/domain/primitives.js';
+} from '../../../contexts/shared/domain/primitives.js';
 import { Aggregate } from '../../shared/domain/aggregate.js';
 
 export class Token extends Aggregate {

@@ -1,4 +1,4 @@
-import { GSApiError } from '@/contexts/shared/domain/error.js';
+import { GSApiError } from '../../../contexts/shared/domain/error.js';
 import type { TokenRepository } from '../domain/token-repository.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { User } from '../domain/user.js';

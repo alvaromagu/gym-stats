@@ -1,5 +1,5 @@
-import { Aggregate } from '@/contexts/shared/domain/aggregate.js';
-import type { Primitives } from '@/contexts/shared/domain/primitives.js';
+import { Aggregate } from '../../../contexts/shared/domain/aggregate.js';
+import type { Primitives } from '../../../contexts/shared/domain/primitives.js';
 import type {
   AuthenticatorTransportFuture,
   Uint8Array_,

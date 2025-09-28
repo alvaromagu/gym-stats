@@ -2,7 +2,7 @@ import { SupaRepository } from '../../shared/infra/persistance/supa-repository.j
 import { User } from '../domain/user.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { Credential } from '../domain/credential.js';
-import type { Json } from '@/contexts/shared/infra/persistance/supabase.js';
+import type { Json } from '../../../contexts/shared/infra/persistance/supabase.js';
 import type { AuthenticatorTransportFuture } from '@simplewebauthn/server';
 
 export class SupaUserRepository
