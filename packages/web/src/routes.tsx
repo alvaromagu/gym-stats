@@ -7,6 +7,7 @@ import { ProfilePage } from './auth/pages/profile';
 import { LoginPage } from './auth/pages/login';
 import { RegisterPage } from './auth/pages/register';
 import { AuthRoute } from './auth/components/auth-route';
+import { CredentialsPage } from './auth/pages/credentials';
 
 export function Routes() {
   const { loading, hasToken, authenticated } = useAuthContext();
@@ -20,6 +21,11 @@ export function Routes() {
         <AuthRoute path='/register' component={RegisterPage} />
         <AuthRoute protected path='/' component={HomePage} />
         <AuthRoute protected path='/profile' component={ProfilePage} />
+        <AuthRoute
+          protected
+          path='/profile/credentials'
+          component={CredentialsPage}
+        />
       </Switch>
     </>
   );

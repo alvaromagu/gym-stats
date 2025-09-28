@@ -111,6 +111,9 @@ async function trekDelete<T>(url: string): Promise<T> {
       method: 'DELETE',
       headers: getHeaders({ includeContent: false }),
     });
+    if (res.status === 204) {
+      return {} as T;
+    }
     return (await res.json()) as T;
   } catch (error: unknown) {
     trekErrorHandler(error as TrekError | ApiError);

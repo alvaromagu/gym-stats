@@ -10,6 +10,7 @@ import { Label } from '@/shared/components/ui/label';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { useProfile } from '../hooks/profile';
+import { Link } from 'wouter';
 
 export function ProfilePage() {
   const { email, fullName, saving, loggingOut, handleSubmit, handleLogout } =
@@ -57,15 +58,20 @@ export function ProfilePage() {
               {saving && <Loader2Icon className='animate-spin size-6' />}
               Guardar cambios
             </Button>
-            <Button
-              variant='destructive'
-              type='button'
-              onClick={handleLogout}
-              disabled={disabled}
-            >
-              {loggingOut && <Loader2Icon className='animate-spin size-6' />}
-              Cerrar sesión
-            </Button>
+            <div className='flex flex-col'>
+              <Button
+                variant='destructive'
+                type='button'
+                onClick={handleLogout}
+                disabled={disabled}
+              >
+                {loggingOut && <Loader2Icon className='animate-spin size-6' />}
+                Cerrar sesión
+              </Button>
+              <Button asChild variant={'link'}>
+                <Link href='/profile/credentials'>Gestionar credenciales</Link>
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
