@@ -8,6 +8,7 @@ export class Token extends Aggregate {
   constructor(
     readonly id: string,
     readonly userId: string,
+    readonly credentialId: string,
     readonly hash: string,
     readonly expiresAt: Date,
     readonly createdAt: Date,
@@ -19,6 +20,7 @@ export class Token extends Aggregate {
     return {
       id: this.id,
       userId: this.userId,
+      credentialId: this.credentialId,
       hash: this.hash,
       expiresAt: this.expiresAt.toISOString() as ISODateTime,
       createdAt: this.createdAt.toISOString() as ISODateTime,

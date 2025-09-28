@@ -112,7 +112,11 @@ export class AuthVerifier {
         const _error = error as Error;
         throw new GSApiError(`JWT sign error: ${_error.message}`, 500);
       }
-      const token = this.getToken({ user, tokenStr });
+      const token = this.getToken({
+        user,
+        tokenStr,
+        credentialId: credential.id,
+      });
       await this.tokenRepository.create(token);
       return { verified: true, token: tokenStr };
     }
@@ -122,9 +126,11 @@ export class AuthVerifier {
   private getToken({
     user,
     tokenStr,
+    credentialId,
   }: {
     user: User;
     tokenStr: string;
+    credentialId: string;
   }): Token {
     const decoded = jwt.decode(tokenStr) as jwt.JwtPayload | null;
     if (decoded?.exp == null) {
@@ -137,6 +143,7 @@ export class AuthVerifier {
     return new Token(
       crypto.randomUUID(),
       user.id,
+      credentialId,
       hashToken(tokenStr),
       expiresAt,
       new Date(),

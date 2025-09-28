@@ -6,4 +6,5 @@ export interface TokenRepository {
   delete: (id: string) => Promise<void>;
   deleteByUserId: (userId: string) => Promise<void>;
   deleteByHash: (hashedToken: string) => Promise<void>;
+  deleteByCredentialId: (credentialId: string) => Promise<void>;
 }

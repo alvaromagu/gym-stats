@@ -34,6 +34,7 @@ export interface Database {
       tokens: {
         Row: {
           created_at: string;
+          credential_id: string;
           expires_at: string;
           hash: string;
           id: string;
@@ -41,6 +42,7 @@ export interface Database {
         };
         Insert: {
           created_at: string;
+          credential_id: string;
           expires_at: string;
           hash: string;
           id: string;
@@ -48,6 +50,7 @@ export interface Database {
         };
         Update: {
           created_at?: string;
+          credential_id?: string;
           expires_at?: string;
           hash?: string;
           id?: string;
@@ -55,9 +58,9 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'tokens_id_fkey';
-            columns: ['id'];
-            isOneToOne: true;
+            foreignKeyName: 'tokens_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },

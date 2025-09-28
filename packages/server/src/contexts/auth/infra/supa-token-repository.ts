@@ -9,13 +9,7 @@ export class SupaTokenRepository
   async create(token: Token): Promise<void> {
     const { error } = await this.client
       .from('tokens')
-      .insert({
-        id: token.id,
-        user_id: token.userId,
-        hash: token.hash,
-        expires_at: token.expiresAt.toISOString(),
-        created_at: token.createdAt.toISOString(),
-      })
+      .insert(this.mapToDb(token))
       .single();
     if (error != null) {
       throw error;
@@ -31,13 +25,7 @@ export class SupaTokenRepository
     if (error != null) {
       return null;
     }
-    return new Token(
-      data.id,
-      data.user_id,
-      data.hash,
-      new Date(data.expires_at),
-      new Date(data.created_at),
-    );
+    return data == null ? null : this.mapToDomain(data);
   }
 
   async delete(id: string): Promise<void> {
@@ -65,5 +53,44 @@ export class SupaTokenRepository
     if (error != null) {
       throw error;
     }
+  }
+
+  async deleteByCredentialId(credentialId: string): Promise<void> {
+    const { error } = await this.client
+      .from('tokens')
+      .delete()
+      .eq('credential_id', credentialId);
+    if (error != null) {
+      throw error;
+    }
+  }
+
+  private mapToDomain(data: {
+    created_at: string;
+    credential_id: string;
+    expires_at: string;
+    hash: string;
+    id: string;
+    user_id: string;
+  }): Token {
+    return new Token(
+      data.id,
+      data.user_id,
+      data.credential_id,
+      data.hash,
+      new Date(data.expires_at),
+      new Date(data.created_at),
+    );
+  }
+
+  private mapToDb(token: Token) {
+    return {
+      id: token.id,
+      user_id: token.userId,
+      credential_id: token.credentialId,
+      hash: token.hash,
+      expires_at: token.expiresAt.toISOString(),
+      created_at: token.createdAt.toISOString(),
+    };
   }
 }
