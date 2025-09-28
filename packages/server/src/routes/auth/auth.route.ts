@@ -138,4 +138,39 @@ export const registerAuthRoutes = (router: Router): void => {
       res.status(httpStatus.NO_CONTENT).send();
     },
   );
+
+  router.get(
+    '/auth/me/credentials',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      if (req.user == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const credentialFinder = container.get('credentialFinder');
+      const credentials = await credentialFinder.execute({
+        userId: req.user.userId,
+      });
+      res.status(httpStatus.OK).json(credentials);
+    },
+  );
+
+  router.delete(
+    '/auth/me/credentials/:credentialId',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      if (req.user == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const credentialId = req.params.credentialId;
+      if (credentialId == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const credentialRemover = container.get('credentialRemover');
+      await credentialRemover.execute({
+        userId: req.user.userId,
+        credentialId,
+      });
+      res.status(httpStatus.NO_CONTENT).send();
+    },
+  );
 };

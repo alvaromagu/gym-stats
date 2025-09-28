@@ -24,6 +24,8 @@ import { SupaTokenRepository } from '../contexts/auth/infra/supa-token-repositor
 import { SessionCloser } from '../contexts/auth/app/session-closer.js';
 import { UserUpdater } from '../contexts/auth/app/user-updater.js';
 import { UserFinder } from '../contexts/auth/app/user-finder.js';
+import { CredentialRemover } from '@/contexts/auth/app/credential-remover.js';
+import { CredentialFinder } from '@/contexts/auth/app/credential-finder.js';
 
 interface Dependencies {
   logger: Logger;
@@ -38,6 +40,8 @@ interface Dependencies {
   sessionCloser: SessionCloser;
   userUpdater: UserUpdater;
   userFinder: UserFinder;
+  credentialFinder: CredentialFinder;
+  credentialRemover: CredentialRemover;
 }
 
 export class Container {
@@ -63,6 +67,8 @@ export class Container {
       sessionCloser: asClass(SessionCloser).singleton(),
       userUpdater: asClass(UserUpdater).singleton(),
       userFinder: asClass(UserFinder).singleton(),
+      credentialFinder: asClass(CredentialFinder).singleton(),
+      credentialRemover: asClass(CredentialRemover).singleton(),
     });
   }
 
