@@ -4,6 +4,10 @@ import type { Config } from '../domain/config.js';
 const DEFAULT_PORT = 8080;
 dotenv.config();
 
+if (process.env.SUPABASE_URL == null || process.env.SUPABASE_URL === '') {
+  throw new Error('Missing SUPABASE_URL environment variable');
+}
+
 if (process.env.SUPABASE_KEY == null || process.env.SUPABASE_KEY === '') {
   throw new Error('Missing SUPABASE_KEY environment variable');
 }
@@ -18,6 +22,7 @@ const origins = origin?.split(',') ?? [];
 export const config: Config = {
   port: process.env.PORT ?? DEFAULT_PORT,
   supabaseKey: process.env.SUPABASE_KEY,
+  supabaseUrl: process.env.SUPABASE_URL,
   origins,
   rpName: process.env.RP_NAME ?? 'Gym Stats',
   rpID: process.env.RP_ID ?? 'localhost',
