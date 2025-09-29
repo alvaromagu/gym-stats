@@ -15,6 +15,8 @@ export interface CredentialsState {
 export interface Credential {
   id: string;
   deviceName: string;
+  createdAt: string;
+  verified: boolean;
 }
 
 export function useCredentials(): CredentialsState {

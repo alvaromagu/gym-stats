@@ -4,6 +4,18 @@ import { body } from 'express-validator';
 import { getToken, validateReqSchema } from '../index.js';
 import { container } from '../../di/index.js';
 import { authMiddleware } from './middlewares.js';
+import type { Details } from 'express-useragent';
+
+function userAgentToDeviceName(ua: Details): string {
+  const platform = ua.platform ?? 'Unknown Platform';
+  const os = ua.os ?? 'N/A';
+  const browser = ua.browser ?? 'Unknown Browser';
+  let deviceType = 'Desktop';
+  if (ua.isMobile) deviceType = 'Phone';
+  else if (ua.isTablet) deviceType = 'Tablet';
+  else if (ua.isBot) deviceType = 'Bot';
+  return `${browser} | ${os} (${platform}) | ${deviceType}`;
+}
 
 export const registerAuthRoutes = (router: Router): void => {
   const registerSchema = [
@@ -40,11 +52,13 @@ export const registerAuthRoutes = (router: Router): void => {
       );
 
       const { email, registrationResponse } = req.body;
-      const deviceName = req.useragent?.os ?? 'unknown';
       const result = await userRegistrationVerifier.execute({
         email,
         registrationResponse,
-        deviceName,
+        deviceName:
+          req.useragent == null
+            ? 'unknown'
+            : userAgentToDeviceName(req.useragent),
       });
       res.status(httpStatus.OK).json(result);
     },

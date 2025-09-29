@@ -5,11 +5,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
-import { Fingerprint, KeyRound, LucideLoader2, Trash2 } from 'lucide-react';
+import {
+  Fingerprint,
+  KeyRound,
+  LucideLoader2,
+  ShieldCheck,
+  ShieldOff,
+  Trash2,
+} from 'lucide-react';
 import { Label } from '@/shared/components/ui/label';
 import { Input } from '@/shared/components/ui/input';
 import { useCredentials } from '../hooks/credentials';
 import { Button } from '@/shared/components/ui/button';
+import { cn } from '@/shared/lib/utils';
 
 export function CredentialsPage() {
   const {
@@ -61,11 +69,35 @@ export function CredentialsPage() {
                   className='flex gap-2 items-center bg-secondary text-secondary-foreground rounded-md p-2'
                 >
                   <KeyRound size={'16'} />
-                  <p className='flex-1'>{credential.deviceName}</p>
+                  <div className='flex-1 flex flex-col w-full overflow-hidden'>
+                    <p className='text-sm overflow-hidden text-ellipsis text-nowrap'>
+                      {credential.deviceName}
+                    </p>
+                    <p className='text-xs text-muted-foreground'>
+                      {new Date(credential.createdAt).toLocaleDateString(
+                        undefined,
+                        {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        },
+                      )}
+                    </p>
+                  </div>
                   <Button
-                    size={'sm'}
+                    size={'icon'}
                     variant={'outline'}
-                    className='hover:text-destructive'
+                    className={cn(
+                      credential.verified &&
+                        'text-success hover:text-success pointer-events-none',
+                    )}
+                    onClick={credential.verified ? undefined : undefined}
+                  >
+                    {credential.verified ? <ShieldCheck /> : <ShieldOff />}
+                  </Button>
+                  <Button
+                    size={'icon'}
+                    variant={'destructive'}
                     onClick={async () => {
                       await deleteCredential(credential.id);
                     }}
