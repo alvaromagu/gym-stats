@@ -53,6 +53,9 @@ export class AuthVerifier {
         400,
       );
     }
+    if (!credential.verified) {
+      throw new GSApiError('Authenticator is not verified', 400);
+    }
     let verification: VerifiedAuthenticationResponse | undefined = undefined;
     try {
       const opts = {
@@ -83,6 +86,8 @@ export class AuthVerifier {
         credential.publicKey,
         authenticationInfo.newCounter,
         credential.deviceName,
+        credential.verified,
+        credential.createdAt,
         credential.transports,
       );
       const updatedUser = new User(

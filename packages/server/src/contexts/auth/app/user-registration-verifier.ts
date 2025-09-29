@@ -60,6 +60,8 @@ export class UserRegistrationVerifier {
         credential.publicKey,
         credential.counter,
         deviceName,
+        true,
+        new Date(),
         credential.transports,
       );
       const existingCredential = user.credentials.find(

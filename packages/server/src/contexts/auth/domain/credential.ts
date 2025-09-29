@@ -1,5 +1,8 @@
 import { Aggregate } from '../../../contexts/shared/domain/aggregate.js';
-import type { Primitives } from '../../../contexts/shared/domain/primitives.js';
+import type {
+  ISODateTime,
+  Primitives,
+} from '../../../contexts/shared/domain/primitives.js';
 import type {
   AuthenticatorTransportFuture,
   Uint8Array_,
@@ -11,6 +14,8 @@ export class Credential extends Aggregate {
     public readonly publicKey: Uint8Array_,
     public readonly counter: number,
     public readonly deviceName: string,
+    public readonly verified: boolean,
+    public readonly createdAt: Date,
     public readonly transports?: AuthenticatorTransportFuture[],
   ) {
     super();
@@ -22,6 +27,8 @@ export class Credential extends Aggregate {
       publicKey: Buffer.from(this.publicKey).toString('base64'),
       counter: this.counter,
       deviceName: this.deviceName,
+      verified: this.verified,
+      createdAt: this.createdAt.toISOString() as ISODateTime,
       transports: this.transports,
     };
   }

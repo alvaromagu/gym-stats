@@ -82,6 +82,8 @@ export class SupaUserRepository
             Buffer.from(cred.publicKey as string, 'base64'),
             cred.counter as number,
             cred.deviceName as string,
+            cred.verified as boolean,
+            new Date(cred.createdAt as string),
             cred.transports as AuthenticatorTransportFuture[],
           ),
       ) ?? [],

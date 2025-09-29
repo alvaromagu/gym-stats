@@ -61,6 +61,7 @@ export function catchErrors(
   __: NextFunction,
 ): void {
   const logger = container.get('logger');
+  console.log(err);
   logger.error(err);
   if (err instanceof GSApiError) {
     res.status(err.status).json({ errors: [{ message: err.message }] });

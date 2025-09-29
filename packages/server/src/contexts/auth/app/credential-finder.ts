@@ -16,6 +16,8 @@ export class CredentialFinder {
       .map((cred) => ({
         id: cred.id,
         deviceName: cred.deviceName,
+        verified: cred.verified,
+        createdAt: cred.createdAt,
       }));
   }
 }
