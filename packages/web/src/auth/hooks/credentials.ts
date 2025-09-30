@@ -4,15 +4,18 @@ import { getAuthUserCredentials } from '../services/auth-user-credentials';
 import { authUserDeleteCredential } from '../services/auth-user-delete-credentials';
 import { authUserCreateCredentialRequest } from '../services/auth-user-create-credential-request';
 import { toast } from 'sonner';
+import { authUserVerifyCredential } from '../services/auth-user-verify-credential';
 
 export interface CredentialsState {
   fullName: string;
   email: string;
   loadingCredentials: boolean;
   credentials: Credential[];
+  verifyingCredentialId: string | null;
   deletingCredentialId: string | null;
   creatingCredentialRequest: boolean;
   credentialRequestUrl: string | null;
+  verifyCredential: (id: string) => Promise<void>;
   deleteCredential: (id: string) => Promise<void>;
   createCredentialRequest: () => Promise<void>;
   resetCredentialRequestUrl: () => void;
@@ -32,6 +35,9 @@ export function useCredentials(): CredentialsState {
   const [loadingCredentials, setLoadingCredentials] = useState(false);
   const [credentials, setCredentials] = useState<Credential[]>([]);
   const [deletingCredentialId, setDeletingCredentialId] = useState<
+    string | null
+  >(null);
+  const [verifyingCredentialId, setVerifyingCredentialId] = useState<
     string | null
   >(null);
   const [creatingCredentialRequest, setCreatingCredentialRequest] =
@@ -58,6 +64,14 @@ export function useCredentials(): CredentialsState {
       mounted = false;
     };
   }, []);
+
+  async function verifyCredential(id: string) {
+    setVerifyingCredentialId(id);
+    await authUserVerifyCredential({ id }).catch(() => undefined);
+    const credentials = await getAuthUserCredentials();
+    setCredentials(credentials);
+    setVerifyingCredentialId(null);
+  }
 
   async function deleteCredential(id: string) {
     setDeletingCredentialId(id);
@@ -95,9 +109,11 @@ export function useCredentials(): CredentialsState {
     email,
     loadingCredentials,
     credentials,
+    verifyingCredentialId,
     deletingCredentialId,
     creatingCredentialRequest,
     credentialRequestUrl,
+    verifyCredential,
     deleteCredential,
     createCredentialRequest,
     resetCredentialRequestUrl,

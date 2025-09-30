@@ -35,9 +35,11 @@ export function CredentialsPage() {
     fullName,
     loadingCredentials,
     credentials,
+    verifyingCredentialId,
     deletingCredentialId,
     creatingCredentialRequest,
     credentialRequestUrl,
+    verifyCredential,
     deleteCredential,
     createCredentialRequest,
     resetCredentialRequestUrl,
@@ -106,9 +108,21 @@ export function CredentialsPage() {
                       credential.verified &&
                         'text-success hover:text-success pointer-events-none',
                     )}
-                    onClick={credential.verified ? undefined : undefined}
+                    onClick={
+                      credential.verified
+                        ? undefined
+                        : async () => {
+                            await verifyCredential(credential.id);
+                          }
+                    }
                   >
-                    {credential.verified ? <ShieldCheck /> : <ShieldOff />}
+                    {verifyingCredentialId === credential.id ? (
+                      <LucideLoader2 className='animate-spin' />
+                    ) : credential.verified ? (
+                      <ShieldCheck />
+                    ) : (
+                      <ShieldOff />
+                    )}
                   </Button>
                   <Button
                     size={'icon'}
