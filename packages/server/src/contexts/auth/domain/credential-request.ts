@@ -1,8 +1,8 @@
-import { Aggregate } from '@/contexts/shared/domain/aggregate.js';
+import { Aggregate } from '../../../contexts/shared/domain/aggregate.js';
 import type {
   ISODateTime,
   Primitives,
-} from '@/contexts/shared/domain/primitives.js';
+} from '../../../contexts/shared/domain/primitives.js';
 
 export class CredentialRequest extends Aggregate {
   constructor(

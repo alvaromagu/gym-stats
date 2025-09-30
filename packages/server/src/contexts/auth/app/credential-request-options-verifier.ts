@@ -6,8 +6,8 @@ import {
 } from '@simplewebauthn/server';
 import type { CredentialRequestRepository } from '../domain/credential-request-repository.js';
 import type { UserRepository } from '../domain/user-repository.js';
-import { GSApiError } from '@/contexts/shared/domain/error.js';
-import type { Config } from '@/contexts/shared/domain/config.js';
+import { GSApiError } from '../../../contexts/shared/domain/error.js';
+import type { Config } from '../../../contexts/shared/domain/config.js';
 import { Credential } from '../domain/credential.js';
 import { User } from '../domain/user.js';
 

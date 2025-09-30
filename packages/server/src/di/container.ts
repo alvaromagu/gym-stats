@@ -26,12 +26,12 @@ import { UserUpdater } from '../contexts/auth/app/user-updater.js';
 import { UserFinder } from '../contexts/auth/app/user-finder.js';
 import { CredentialRemover } from '../contexts/auth/app/credential-remover.js';
 import { CredentialFinder } from '../contexts/auth/app/credential-finder.js';
-import { CredentialVerifier } from '@/contexts/auth/app/credential-verifier.js';
-import { CredentialRequestCreator } from '@/contexts/auth/app/credential-request-creator.js';
-import type { CredentialRequestRepository } from '@/contexts/auth/domain/credential-request-repository.js';
-import { SupaCredentialRequestRepository } from '@/contexts/auth/infra/supa-credential-request-repository.js';
-import { CredentialRequestOptionsCreator } from '@/contexts/auth/app/credential-request-options-creator.js';
-import { CredentialRequestOptionsVerifier } from '@/contexts/auth/app/credential-request-options-verifier.js';
+import { CredentialVerifier } from '../contexts/auth/app/credential-verifier.js';
+import { CredentialRequestCreator } from '../contexts/auth/app/credential-request-creator.js';
+import type { CredentialRequestRepository } from '../contexts/auth/domain/credential-request-repository.js';
+import { SupaCredentialRequestRepository } from '../contexts/auth/infra/supa-credential-request-repository.js';
+import { CredentialRequestOptionsCreator } from '../contexts/auth/app/credential-request-options-creator.js';
+import { CredentialRequestOptionsVerifier } from '../contexts/auth/app/credential-request-options-verifier.js';
 
 interface Dependencies {
   logger: Logger;

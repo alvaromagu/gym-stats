@@ -1,4 +1,4 @@
-import { SupaRepository } from '@/contexts/shared/infra/persistance/supa-repository.js';
+import { SupaRepository } from '../../../contexts/shared/infra/persistance/supa-repository.js';
 import type { CredentialRequestRepository } from '../domain/credential-request-repository.js';
 import { CredentialRequest } from '../domain/credential-request.js';
 

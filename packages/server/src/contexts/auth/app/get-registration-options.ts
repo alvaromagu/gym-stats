@@ -1,4 +1,4 @@
-import type { Config } from '@/contexts/shared/domain/config.js';
+import type { Config } from '../../../contexts/shared/domain/config.js';
 import type { GenerateRegistrationOptionsOpts } from '@simplewebauthn/server';
 
 export function getRegistrationOptions({

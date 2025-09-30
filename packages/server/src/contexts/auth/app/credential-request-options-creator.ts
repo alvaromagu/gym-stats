@@ -1,7 +1,7 @@
-import { GSApiError } from '@/contexts/shared/domain/error.js';
+import { GSApiError } from '../../../contexts/shared/domain/error.js';
 import type { CredentialRequestRepository } from '../domain/credential-request-repository.js';
 import type { UserRepository } from '../domain/user-repository.js';
-import type { Config } from '@/contexts/shared/domain/config.js';
+import type { Config } from '../../../contexts/shared/domain/config.js';
 import { getRegistrationOptions } from './get-registration-options.js';
 import { User } from '../domain/user.js';
 import {

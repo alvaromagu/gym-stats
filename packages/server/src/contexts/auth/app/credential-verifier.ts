@@ -1,4 +1,4 @@
-import { GSApiError } from '@/contexts/shared/domain/error.js';
+import { GSApiError } from '../../../contexts/shared/domain/error.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { Credential } from '../domain/credential.js';
 import httpStatus from 'http-status';

@@ -1,4 +1,4 @@
-import { GSApiError } from '@/contexts/shared/domain/error.js';
+import { GSApiError } from '../../../contexts/shared/domain/error.js';
 import type { CredentialRequestRepository } from '../domain/credential-request-repository.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { CredentialRequest } from '../domain/credential-request.js';
