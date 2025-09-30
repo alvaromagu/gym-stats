@@ -8,6 +8,7 @@ import { LoginPage } from './auth/pages/login';
 import { RegisterPage } from './auth/pages/register';
 import { AuthRoute } from './auth/components/auth-route';
 import { CredentialsPage } from './auth/pages/credentials';
+import { LinkCredentialRequestPage } from './auth/pages/link-credential-request';
 
 export function Routes() {
   const { loading, hasToken, authenticated } = useAuthContext();
@@ -19,6 +20,10 @@ export function Routes() {
       <Switch>
         <AuthRoute path='/login' component={LoginPage} />
         <AuthRoute path='/register' component={RegisterPage} />
+        <AuthRoute
+          path='/link-credential-request/:id'
+          component={LinkCredentialRequestPage}
+        />
         <AuthRoute protected path='/' component={HomePage} />
         <AuthRoute protected path='/profile' component={ProfilePage} />
         <AuthRoute

@@ -3,10 +3,10 @@ import { User } from '../domain/user.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import {
   generateRegistrationOptions,
-  type GenerateRegistrationOptionsOpts,
   type PublicKeyCredentialCreationOptionsJSON,
 } from '@simplewebauthn/server';
 import type { Config } from '../../shared/domain/config.js';
+import { getRegistrationOptions } from './get-registration-options.js';
 
 export class UserCreator {
   constructor(
@@ -24,7 +24,7 @@ export class UserCreator {
     await this.ensureEmailIsUnique(email);
     const id = crypto.randomUUID();
     const options = await generateRegistrationOptions(
-      this.getRegistrationOptions({ email }),
+      getRegistrationOptions({ email, config: this.config }),
     );
     const user = new User(id, email, fullName, [], options.challenge);
     await this.userRepository.create(user);
@@ -36,26 +36,5 @@ export class UserCreator {
     if (user != null) {
       throw new GSError('Email already in use');
     }
-  }
-
-  private getRegistrationOptions({
-    email,
-  }: {
-    email: string;
-  }): GenerateRegistrationOptionsOpts {
-    return {
-      rpName: this.config.rpName,
-      rpID: this.config.rpID,
-      userName: email,
-      userDisplayName: email,
-      timeout: 60000,
-      attestationType: 'none',
-      excludeCredentials: [],
-      authenticatorSelection: {
-        residentKey: 'discouraged',
-        userVerification: 'preferred',
-      },
-      supportedAlgorithmIDs: [-7, -257],
-    };
   }
 }

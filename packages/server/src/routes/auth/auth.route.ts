@@ -101,6 +101,52 @@ export const registerAuthRoutes = (router: Router): void => {
     },
   );
 
+  const createCredentialRequestOptionsSchema = [
+    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+  ];
+
+  router.post(
+    '/auth/create-credential-request-options',
+    createCredentialRequestOptionsSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const credentialRequestOptionsCreator = container.get(
+        'credentialRequestOptionsCreator',
+      );
+      const optionsJSON = await credentialRequestOptionsCreator.execute({
+        id: req.body.id,
+      });
+      res.status(httpStatus.OK).json(optionsJSON);
+    },
+  );
+
+  const verifyCredentialRequestOptionsSchema = [
+    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+    body('registrationResponse').exists().isObject(),
+  ];
+
+  router.post(
+    '/auth/verify-credential-request-options',
+    verifyCredentialRequestOptionsSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const credentialRequestOptionsVerifier = container.get(
+        'credentialRequestOptionsVerifier',
+      );
+
+      const { id, registrationResponse } = req.body;
+      const result = await credentialRequestOptionsVerifier.execute({
+        id,
+        registrationResponse,
+        deviceName:
+          req.useragent == null
+            ? 'unknown'
+            : userAgentToDeviceName(req.useragent),
+      });
+      res.status(httpStatus.OK).json(result);
+    },
+  );
+
   router.post(
     '/auth/logout',
     authMiddleware,
