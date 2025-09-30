@@ -26,6 +26,7 @@ import { UserUpdater } from '../contexts/auth/app/user-updater.js';
 import { UserFinder } from '../contexts/auth/app/user-finder.js';
 import { CredentialRemover } from '../contexts/auth/app/credential-remover.js';
 import { CredentialFinder } from '../contexts/auth/app/credential-finder.js';
+import type { CredentialVerifier } from '@/contexts/auth/app/credential-verifier.js';
 
 interface Dependencies {
   logger: Logger;
@@ -42,6 +43,7 @@ interface Dependencies {
   userFinder: UserFinder;
   credentialFinder: CredentialFinder;
   credentialRemover: CredentialRemover;
+  credentialVerifier: CredentialVerifier;
 }
 
 export class Container {

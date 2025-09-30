@@ -187,4 +187,24 @@ export const registerAuthRoutes = (router: Router): void => {
       res.status(httpStatus.NO_CONTENT).send();
     },
   );
+
+  router.post(
+    '/auth/credentials/:credentialId/verify',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      if (req.user == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const credentialId = req.params.credentialId;
+      if (credentialId == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const credentialVerifier = container.get('credentialVerifier');
+      await credentialVerifier.execute({
+        userId: req.user.userId,
+        credentialId,
+      });
+      res.status(httpStatus.NO_CONTENT).send();
+    },
+  );
 };
