@@ -39,6 +39,7 @@ export function ProfilePage() {
                 name='email'
                 defaultValue={email}
                 disabled
+                readOnly
               />
             </Label>
 
@@ -58,20 +59,18 @@ export function ProfilePage() {
               {saving && <Loader2Icon className='animate-spin size-6' />}
               Guardar cambios
             </Button>
-            <div className='flex flex-col'>
-              <Button
-                variant='destructive'
-                type='button'
-                onClick={handleLogout}
-                disabled={disabled}
-              >
-                {loggingOut && <Loader2Icon className='animate-spin size-6' />}
-                Cerrar sesión
-              </Button>
-              <Button asChild variant={'link'}>
-                <Link href='/profile/credentials'>Gestionar credenciales</Link>
-              </Button>
-            </div>
+            <Button
+              variant='destructive'
+              type='button'
+              onClick={handleLogout}
+              disabled={disabled}
+            >
+              {loggingOut && <Loader2Icon className='animate-spin size-6' />}
+              Cerrar sesión
+            </Button>
+            <Button asChild variant={'link'}>
+              <Link href='/profile/credentials'>Gestionar credenciales</Link>
+            </Button>
           </form>
         </CardContent>
       </Card>

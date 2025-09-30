@@ -31,6 +31,32 @@ export interface Database {
   };
   public: {
     Tables: {
+      credential_requests: {
+        Row: {
+          expires_at: string;
+          id: string;
+          user_id: string;
+        };
+        Insert: {
+          expires_at: string;
+          id?: string;
+          user_id: string;
+        };
+        Update: {
+          expires_at?: string;
+          id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'user-credential-requests_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       tokens: {
         Row: {
           created_at: string;

@@ -26,7 +26,10 @@ import { UserUpdater } from '../contexts/auth/app/user-updater.js';
 import { UserFinder } from '../contexts/auth/app/user-finder.js';
 import { CredentialRemover } from '../contexts/auth/app/credential-remover.js';
 import { CredentialFinder } from '../contexts/auth/app/credential-finder.js';
-import type { CredentialVerifier } from '@/contexts/auth/app/credential-verifier.js';
+import { CredentialVerifier } from '@/contexts/auth/app/credential-verifier.js';
+import { CredentialRequestCreator } from '@/contexts/auth/app/credential-request-creator.js';
+import type { CredentialRequestRepository } from '@/contexts/auth/domain/credential-request-repository.js';
+import { SupaCredentialRequestRepository } from '@/contexts/auth/infra/supa-credential-request-repository.js';
 
 interface Dependencies {
   logger: Logger;
@@ -34,6 +37,7 @@ interface Dependencies {
   supaClient: SupaClient;
   userRepository: UserRepository;
   tokenRepository: TokenRepository;
+  credentialRequestRepository: CredentialRequestRepository;
   userCreator: UserCreator;
   userRegistrationVerifier: UserRegistrationVerifier;
   authOptsCreator: AuthOptsCreator;
@@ -44,6 +48,7 @@ interface Dependencies {
   credentialFinder: CredentialFinder;
   credentialRemover: CredentialRemover;
   credentialVerifier: CredentialVerifier;
+  credentialRequestCreator: CredentialRequestCreator;
 }
 
 export class Container {
@@ -62,6 +67,9 @@ export class Container {
       userRepository: asClass<UserRepository>(SupaUserRepository).singleton(),
       tokenRepository:
         asClass<TokenRepository>(SupaTokenRepository).singleton(),
+      credentialRequestRepository: asClass<CredentialRequestRepository>(
+        SupaCredentialRequestRepository,
+      ).singleton(),
       userCreator: asClass(UserCreator).singleton(),
       userRegistrationVerifier: asClass(UserRegistrationVerifier).singleton(),
       authOptsCreator: asClass(AuthOptsCreator).singleton(),
@@ -71,6 +79,8 @@ export class Container {
       userFinder: asClass(UserFinder).singleton(),
       credentialFinder: asClass(CredentialFinder).singleton(),
       credentialRemover: asClass(CredentialRemover).singleton(),
+      credentialVerifier: asClass(CredentialVerifier).singleton(),
+      credentialRequestCreator: asClass(CredentialRequestCreator).singleton(),
     });
   }
 

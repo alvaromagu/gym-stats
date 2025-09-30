@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useAuthUser } from './auth-context';
 import { getAuthUserCredentials } from '../services/auth-user-credentials';
 import { authUserDeleteCredential } from '../services/auth-user-delete-credentials';
+import { authUserCreateCredentialRequest } from '../services/auth-user-create-credential-request';
+import { toast } from 'sonner';
 
 export interface CredentialsState {
   fullName: string;
@@ -9,7 +11,11 @@ export interface CredentialsState {
   loadingCredentials: boolean;
   credentials: Credential[];
   deletingCredentialId: string | null;
+  creatingCredentialRequest: boolean;
+  credentialRequestUrl: string | null;
   deleteCredential: (id: string) => Promise<void>;
+  createCredentialRequest: () => Promise<void>;
+  resetCredentialRequestUrl: () => void;
 }
 
 export interface Credential {
@@ -26,6 +32,11 @@ export function useCredentials(): CredentialsState {
   const [loadingCredentials, setLoadingCredentials] = useState(false);
   const [credentials, setCredentials] = useState<Credential[]>([]);
   const [deletingCredentialId, setDeletingCredentialId] = useState<
+    string | null
+  >(null);
+  const [creatingCredentialRequest, setCreatingCredentialRequest] =
+    useState(false);
+  const [credentialRequestUrl, setCredentialRequestUrl] = useState<
     string | null
   >(null);
 
@@ -56,12 +67,39 @@ export function useCredentials(): CredentialsState {
     setDeletingCredentialId(null);
   }
 
+  async function createCredentialRequest() {
+    setCreatingCredentialRequest(true);
+    const credentialRequest = await authUserCreateCredentialRequest().catch(
+      () => undefined,
+    );
+    if (credentialRequest == null) {
+      toast.error('Error al crear la solicitud de credencial');
+      setCreatingCredentialRequest(false);
+    } else {
+      const id = credentialRequest.id;
+      const url = `${window.location.origin}/link-credential-request/${id}`;
+      setCredentialRequestUrl(url);
+      toast.success(
+        'Se ha creado una nueva solicitud de credencial. Completa el proceso en tu dispositivo.',
+      );
+    }
+    setCreatingCredentialRequest(false);
+  }
+
+  function resetCredentialRequestUrl() {
+    setCredentialRequestUrl(null);
+  }
+
   return {
     fullName,
     email,
     loadingCredentials,
     credentials,
     deletingCredentialId,
+    creatingCredentialRequest,
+    credentialRequestUrl,
     deleteCredential,
+    createCredentialRequest,
+    resetCredentialRequestUrl,
   };
 }

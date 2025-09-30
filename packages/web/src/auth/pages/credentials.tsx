@@ -11,6 +11,7 @@ import {
   LucideLoader2,
   ShieldCheck,
   ShieldOff,
+  ShieldPlus,
   Trash2,
 } from 'lucide-react';
 import { Label } from '@/shared/components/ui/label';
@@ -18,6 +19,15 @@ import { Input } from '@/shared/components/ui/input';
 import { useCredentials } from '../hooks/credentials';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
+import { toast } from 'sonner';
+import QRCode from 'react-qr-code';
 
 export function CredentialsPage() {
   const {
@@ -26,7 +36,11 @@ export function CredentialsPage() {
     loadingCredentials,
     credentials,
     deletingCredentialId,
+    creatingCredentialRequest,
+    credentialRequestUrl,
     deleteCredential,
+    createCredentialRequest,
+    resetCredentialRequestUrl,
   } = useCredentials();
 
   return (
@@ -47,6 +61,7 @@ export function CredentialsPage() {
               type='email'
               name='email'
               defaultValue={email}
+              readOnly
               disabled
             />
           </Label>
@@ -111,6 +126,59 @@ export function CredentialsPage() {
                   </Button>
                 </li>
               ))}
+            <li>
+              <Dialog
+                onOpenChange={(open) => {
+                  if (!open) {
+                    resetCredentialRequestUrl();
+                  }
+                }}
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    className='w-full'
+                    variant={'secondary'}
+                    onClick={async () => {
+                      console.log('hola');
+                      await createCredentialRequest();
+                    }}
+                    disabled={creatingCredentialRequest}
+                  >
+                    {creatingCredentialRequest ? (
+                      <LucideLoader2 className='animate-spin' />
+                    ) : (
+                      <ShieldPlus />
+                    )}
+                    Registrar nueva credencial
+                  </Button>
+                </DialogTrigger>
+                {credentialRequestUrl != null && (
+                  <DialogContent>
+                    <DialogTitle>Enlace para la vinculación</DialogTitle>
+                    <DialogDescription>
+                      Escanea este código QR con tu dispositivo
+                    </DialogDescription>
+                    <div className='mx-auto my-4 bg-white p-2 py-4 rounded'>
+                      <QRCode
+                        value={credentialRequestUrl}
+                        viewBox={`0 0 256 256`}
+                      />
+                    </div>
+                    <Button
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(
+                          credentialRequestUrl,
+                        );
+                        toast.success('Enlace copiado al portapapeles');
+                      }}
+                      className='my-4'
+                    >
+                      Copiar enlace de vinculación
+                    </Button>
+                  </DialogContent>
+                )}
+              </Dialog>
+            </li>
           </ul>
         </CardContent>
       </Card>

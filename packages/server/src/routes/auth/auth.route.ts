@@ -189,7 +189,7 @@ export const registerAuthRoutes = (router: Router): void => {
   );
 
   router.post(
-    '/auth/credentials/:credentialId/verify',
+    '/auth/me/credentials/:credentialId/verify',
     authMiddleware,
     async (req: Request, res: Response) => {
       if (req.user == null) {
@@ -205,6 +205,23 @@ export const registerAuthRoutes = (router: Router): void => {
         credentialId,
       });
       res.status(httpStatus.NO_CONTENT).send();
+    },
+  );
+
+  router.post(
+    '/auth/me/credential-request',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      if (req.user == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const credentialRequestCreator = container.get(
+        'credentialRequestCreator',
+      );
+      const result = await credentialRequestCreator.execute({
+        userId: req.user.userId,
+      });
+      res.status(httpStatus.OK).json(result.toPrimitives());
     },
   );
 };
