@@ -13,9 +13,17 @@ import { useProfile } from '../hooks/profile';
 import { Link } from 'wouter';
 
 export function ProfilePage() {
-  const { email, fullName, saving, loggingOut, handleSubmit, handleLogout } =
-    useProfile();
-  const disabled = saving || loggingOut;
+  const {
+    email,
+    fullName,
+    saving,
+    loggingOut,
+    loggingOutAll,
+    handleSubmit,
+    handleLogout,
+    handleLogoutAll,
+  } = useProfile();
+  const disabled = saving || loggingOut || loggingOutAll;
 
   return (
     <main className='p-2'>
@@ -67,6 +75,15 @@ export function ProfilePage() {
             >
               {loggingOut && <Loader2Icon className='animate-spin size-6' />}
               Cerrar sesión
+            </Button>
+            <Button
+              variant='destructive'
+              type='button'
+              onClick={handleLogoutAll}
+              disabled={disabled}
+            >
+              {loggingOutAll && <Loader2Icon className='animate-spin size-6' />}
+              Cerrar sesión en todos los dispositivos
             </Button>
             <Button asChild variant={'link'}>
               <Link href='/profile/credentials'>Gestionar credenciales</Link>

@@ -148,14 +148,29 @@ export const registerAuthRoutes = (router: Router): void => {
   );
 
   router.post(
-    '/auth/logout',
+    '/auth/me/logout',
     authMiddleware,
     async (req: Request, res: Response) => {
       const sessionCloser = container.get('sessionCloser');
       const token = getToken(req);
-      if (token != null) {
-        await sessionCloser.execute({ token });
+      if (token == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
       }
+      await sessionCloser.execute({ token, userId: undefined });
+      res.status(httpStatus.NO_CONTENT).send();
+    },
+  );
+
+  router.post(
+    '/auth/me/logout/all',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      const sessionCloser = container.get('sessionCloser');
+      const userId = req.user?.userId;
+      if (userId == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      await sessionCloser.execute({ userId, token: undefined });
       res.status(httpStatus.NO_CONTENT).send();
     },
   );

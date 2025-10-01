@@ -4,12 +4,14 @@ import { logout } from '../services/logout';
 import { tokenKey } from '@/shared/constants/session-keys';
 import { toast } from 'sonner';
 import { updateUser } from '../services/update-user';
+import { logoutAll } from '../services/logout-all';
 
 export function useProfile() {
   const { reloadSession } = useAuthUser();
   const { user } = useAuthUser();
   const [saving, setSaving] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [loggingOutAll, setLoggingOutAll] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,12 +44,27 @@ export function useProfile() {
     }
   }
 
+  async function handleLogoutAll() {
+    setLoggingOutAll(true);
+    try {
+      await logoutAll();
+      sessionStorage.removeItem(tokenKey);
+      await reloadSession();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setLoggingOutAll(false);
+    }
+  }
+
   return {
     email: user.email,
     fullName: user.fullName,
     saving,
     loggingOut,
+    loggingOutAll,
     handleSubmit,
     handleLogout,
+    handleLogoutAll,
   };
 }
