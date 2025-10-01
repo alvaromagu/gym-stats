@@ -67,7 +67,13 @@ export function useCredentials(): CredentialsState {
 
   async function verifyCredential(id: string) {
     setVerifyingCredentialId(id);
-    await authUserVerifyCredential({ id }).catch(() => undefined);
+    await authUserVerifyCredential({ id })
+      .then(() => {
+        toast.success('Credencial verificada correctamente');
+      })
+      .catch(() => {
+        toast.error('Error al verificar la credencial');
+      });
     const credentials = await getAuthUserCredentials();
     setCredentials(credentials);
     setVerifyingCredentialId(null);
@@ -75,7 +81,13 @@ export function useCredentials(): CredentialsState {
 
   async function deleteCredential(id: string) {
     setDeletingCredentialId(id);
-    await authUserDeleteCredential(id).catch(() => undefined);
+    await authUserDeleteCredential(id)
+      .then(() => {
+        toast.success('Credencial eliminada correctamente');
+      })
+      .catch(() => {
+        toast.error('Error al eliminar la credencial');
+      });
     const credentials = await getAuthUserCredentials();
     setCredentials(credentials);
     setDeletingCredentialId(null);
