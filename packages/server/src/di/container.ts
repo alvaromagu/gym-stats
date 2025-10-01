@@ -32,7 +32,7 @@ import type { CredentialRequestRepository } from '../contexts/auth/domain/creden
 import { SupaCredentialRequestRepository } from '../contexts/auth/infra/supa-credential-request-repository.js';
 import { CredentialRequestOptionsCreator } from '../contexts/auth/app/credential-request-options-creator.js';
 import { CredentialRequestOptionsVerifier } from '../contexts/auth/app/credential-request-options-verifier.js';
-import { CredentialRequestRemover } from '@/contexts/auth/app/credential-request-remover.js';
+import { CredentialRequestRemover } from '../contexts/auth/app/credential-request-remover.js';
 
 interface Dependencies {
   logger: Logger;
