@@ -14,7 +14,6 @@ export function useLinkCredentialRequest() {
     if (id == null) {
       return;
     }
-    console.log({ id });
     setLoading(true);
     await createCredentialRequestOptions({
       id,

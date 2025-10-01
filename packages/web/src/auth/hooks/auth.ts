@@ -34,8 +34,6 @@ export function useAuth(): AuthState {
     user: undefined,
   });
 
-  console.log({ token });
-
   const getUser = useCallback(async () => {
     if (token == null) {
       return { user: undefined };
