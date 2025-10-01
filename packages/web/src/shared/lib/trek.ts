@@ -2,6 +2,7 @@ import { toast } from 'sonner';
 import { ApiError } from '@/shared/errors/api-error';
 import { TrekError } from '@/shared/errors/trek-error';
 import { tokenKey } from '../constants/session-keys';
+import { getJsonFromSession } from './utils';
 
 interface RequestOptions extends RequestInit {
   // Allows consumers to pass any standard fetch options
@@ -50,6 +51,11 @@ async function trekFetch(
         const errorData = (await response.json()) as unknown;
         apiMessage = getApiMessage(errorData);
       } catch (err) {}
+      if (response.status === 401) {
+        apiMessage =
+          'Su sesión ha expirado. Por favor, inicie sesión de nuevo.';
+        window.sessionStorage.removeItem(tokenKey);
+      }
       throw new ApiError(response.status, apiMessage);
     }
     return response;
@@ -69,8 +75,10 @@ function trekErrorHandler(err: TrekError | ApiError): never {
 
 function getHeaders({ includeContent } = { includeContent: true }): Headers {
   const headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-  const token = sessionStorage.getItem(tokenKey);
+  if (includeContent) {
+    headers.append('Content-Type', 'application/json');
+  }
+  const token = getJsonFromSession<string>(tokenKey);
   if (token != null) {
     headers.append('Authorization', `Bearer ${token}`);
   }

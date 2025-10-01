@@ -1,7 +1,8 @@
 import { tokenKey } from '@/shared/constants/session-keys';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { User } from '../types/user';
 import { getAuthUserInfo } from '../services/auth-user-info';
+import { useSessionStorage } from '@/shared/hooks/session-storage';
 
 export type AuthState =
   | {
@@ -10,6 +11,7 @@ export type AuthState =
       authenticated: false;
       user: undefined;
       reloadSession: () => Promise<void>;
+      setToken: (value: string | null) => void;
     }
   | {
       loading: boolean;
@@ -17,6 +19,7 @@ export type AuthState =
       authenticated: true;
       user: User;
       reloadSession: () => Promise<void>;
+      setToken: (value: string | null) => void;
     };
 
 export interface AuthInternalState {
@@ -25,19 +28,21 @@ export interface AuthInternalState {
 }
 
 export function useAuth(): AuthState {
+  const [token, setToken] = useSessionStorage<string | null>(tokenKey);
   const [authState, setAuthState] = useState<AuthInternalState>({
     loading: true,
     user: undefined,
   });
 
-  async function getUser() {
-    const token = sessionStorage.getItem(tokenKey);
+  console.log({ token });
+
+  const getUser = useCallback(async () => {
     if (token == null) {
       return { user: undefined };
     }
     const user = await getAuthUserInfo().catch(() => undefined);
     return { user };
-  }
+  }, [token]);
 
   async function reloadSession() {
     const { user } = await getUser();
@@ -60,13 +65,14 @@ export function useAuth(): AuthState {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [getUser]);
 
   return {
     loading: authState.loading,
-    hasToken: sessionStorage.getItem(tokenKey) != null,
+    hasToken: token != null,
     authenticated: authState.user != null,
     user: authState.user,
     reloadSession,
+    setToken,
   } as AuthState;
 }

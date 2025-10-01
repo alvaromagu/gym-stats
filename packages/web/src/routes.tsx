@@ -1,4 +1,4 @@
-import { Switch, Link } from 'wouter';
+import { Switch, Link, Route, Redirect } from 'wouter';
 import { Button } from './shared/components/ui/button';
 import { useAuthContext } from './auth/hooks/auth-context';
 import { Home, User } from 'lucide-react';
@@ -31,6 +31,11 @@ export function Routes() {
           path='/profile/credentials'
           component={CredentialsPage}
         />
+        {!loading && (
+          <Route>
+            <Redirect to={authenticated ? '/' : '/login'} />
+          </Route>
+        )}
       </Switch>
     </>
   );

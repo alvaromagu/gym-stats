@@ -3,11 +3,10 @@ import { toast } from 'sonner';
 import { generateAuthOptions } from '../services/generate-auth-options';
 import { startAuthentication } from '@simplewebauthn/browser';
 import { verifyAuth } from '../services/verify-auth';
-import { tokenKey } from '@/shared/constants/session-keys';
 import { useAuthContext } from './auth-context';
 
 export function useLogin() {
-  const { reloadSession } = useAuthContext();
+  const { reloadSession, setToken } = useAuthContext();
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -31,7 +30,7 @@ export function useLogin() {
       )
       .then(async (res) => {
         if (res.verified) {
-          sessionStorage.setItem(tokenKey, res.token);
+          setToken(res.token);
           toast.success('¡Su inicio de sesión ha sido verificado!');
           await reloadSession();
         } else {
