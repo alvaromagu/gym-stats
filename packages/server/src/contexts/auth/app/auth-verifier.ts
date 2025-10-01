@@ -106,7 +106,7 @@ export class AuthVerifier {
         fullName: user.fullName,
       };
       const options: SignOptions = {
-        expiresIn: '10s',
+        expiresIn: '2h',
         issuer: this.config.rpID,
         subject: user.id,
       };
