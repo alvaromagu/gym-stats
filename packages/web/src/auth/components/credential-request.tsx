@@ -5,19 +5,22 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from '@/shared/components/ui/dialog';
-import { LucideLoader2, ShieldPlus } from 'lucide-react';
+import { LucideLoader2, ShieldPlus, XIcon } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { toast } from 'sonner';
 import { useCredentialRequest } from '../hooks/credential-request';
 
 export function CredentialRequest() {
-  const { loading, url, create, reset } = useCredentialRequest();
+  const { loading, removing, url, create, remove, reset } =
+    useCredentialRequest();
 
   return (
     <Dialog
-      onOpenChange={(open) => {
-        if (!open) {
+      open={url != null}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
           reset();
         }
       }}
@@ -40,12 +43,19 @@ export function CredentialRequest() {
         </Button>
       </DialogTrigger>
       {url != null && (
-        <DialogContent>
+        <DialogContent showCloseButton={false}>
+          <DialogClose
+            onClick={reset}
+            className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+          >
+            <XIcon />
+            <span className='sr-only'>Close</span>
+          </DialogClose>
           <DialogTitle>Enlace para la vinculación</DialogTitle>
           <DialogDescription>
             Escanea este código QR con tu dispositivo
           </DialogDescription>
-          <div className='mx-auto my-4 bg-white p-2 py-4 rounded'>
+          <div className='mx-auto bg-white p-2 py-4 rounded'>
             <QRCode value={url} viewBox={`0 0 256 256`} />
           </div>
           <Button
@@ -53,9 +63,12 @@ export function CredentialRequest() {
               await navigator.clipboard.writeText(url);
               toast.success('Enlace copiado al portapapeles');
             }}
-            className='my-4'
           >
             Copiar enlace de vinculación
+          </Button>
+          <Button onClick={remove} variant='destructive' disabled={removing}>
+            {removing && <LucideLoader2 className='animate-spin' />}
+            Eliminar enlace de vinculación
           </Button>
         </DialogContent>
       )}

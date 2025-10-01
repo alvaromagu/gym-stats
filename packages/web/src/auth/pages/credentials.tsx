@@ -25,7 +25,7 @@ export function CredentialsPage() {
             <CardDescription>Gestiona tus credenciales</CardDescription>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className='flex flex-col gap-3'>
           <Label className='flex flex-col items-start gap-3'>
             Correo electrónico
             <Input
@@ -37,8 +37,10 @@ export function CredentialsPage() {
               disabled
             />
           </Label>
-          <p className='mt-4'>Dispositivos registrados</p>
-          <CredentialList />
+          <div className='flex flex-col gap-3'>
+            <p>Dispositivos registrados</p>
+            <CredentialList />
+          </div>
           <CredentialRequest />
         </CardContent>
       </Card>

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { authUserCreateCredentialRequest } from '../services/auth-user-create-credential-request';
 import { toast } from 'sonner';
+import { authUserRemoveCredentialRequest } from '../services/auth-user-remove-credential-request';
 
 export function useCredentialRequest() {
   const [loading, setLoading] = useState(false);
+  const [removing, setRemoving] = useState(false);
   const [url, setUrl] = useState<string | null>(null);
 
   async function create() {
@@ -25,14 +27,28 @@ export function useCredentialRequest() {
     setLoading(false);
   }
 
+  async function remove() {
+    setRemoving(true);
+    try {
+      await authUserRemoveCredentialRequest();
+      toast.success('Se ha eliminado la solicitud de credencial');
+      setUrl(null);
+    } catch {
+      toast.error('Error al eliminar la solicitud de credencial');
+    }
+    setRemoving(false);
+  }
+
   function reset() {
     setUrl(null);
   }
 
   return {
     loading,
+    removing,
     url,
     create,
+    remove,
     reset,
   };
 }

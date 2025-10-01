@@ -285,4 +285,21 @@ export const registerAuthRoutes = (router: Router): void => {
       res.status(httpStatus.OK).json(result.toPrimitives());
     },
   );
+
+  router.delete(
+    '/auth/me/credential-request',
+    authMiddleware,
+    async (req: Request, res: Response) => {
+      if (req.user == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const credentialRequestRemover = container.get(
+        'credentialRequestRemover',
+      );
+      await credentialRequestRemover.execute({
+        userId: req.user.userId,
+      });
+      res.status(httpStatus.NO_CONTENT).send();
+    },
+  );
 };

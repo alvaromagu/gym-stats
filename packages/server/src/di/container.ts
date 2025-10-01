@@ -32,6 +32,7 @@ import type { CredentialRequestRepository } from '../contexts/auth/domain/creden
 import { SupaCredentialRequestRepository } from '../contexts/auth/infra/supa-credential-request-repository.js';
 import { CredentialRequestOptionsCreator } from '../contexts/auth/app/credential-request-options-creator.js';
 import { CredentialRequestOptionsVerifier } from '../contexts/auth/app/credential-request-options-verifier.js';
+import { CredentialRequestRemover } from '@/contexts/auth/app/credential-request-remover.js';
 
 interface Dependencies {
   logger: Logger;
@@ -53,6 +54,7 @@ interface Dependencies {
   credentialRequestCreator: CredentialRequestCreator;
   credentialRequestOptionsCreator: CredentialRequestOptionsCreator;
   credentialRequestOptionsVerifier: CredentialRequestOptionsVerifier;
+  credentialRequestRemover: CredentialRequestRemover;
 }
 
 export class Container {
@@ -91,6 +93,7 @@ export class Container {
       credentialRequestOptionsVerifier: asClass(
         CredentialRequestOptionsVerifier,
       ).singleton(),
+      credentialRequestRemover: asClass(CredentialRequestRemover).singleton(),
     });
   }
 

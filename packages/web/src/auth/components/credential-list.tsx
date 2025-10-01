@@ -7,7 +7,7 @@ export function CredentialList() {
   const { loading, credentials, reload } = useCredentialList();
 
   return (
-    <ul className='flex flex-col gap-2 mt-3'>
+    <ul className='flex flex-col gap-2'>
       {loading && (
         <li className='w-full flex items-center justify-center'>
           <LucideLoader2 className='animate-spin' />

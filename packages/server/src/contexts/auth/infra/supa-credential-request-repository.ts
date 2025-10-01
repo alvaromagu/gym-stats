@@ -50,6 +50,16 @@ export class SupaCredentialRequestRepository
     }
   }
 
+  async deleteByUserId(userId: string): Promise<void> {
+    const { error } = await this.client
+      .from('credential_requests')
+      .delete()
+      .eq('user_id', userId);
+    if (error != null) {
+      throw error;
+    }
+  }
+
   private mapToDb(credentialRequest: CredentialRequest) {
     const primitives = credentialRequest.toPrimitives();
     return {
