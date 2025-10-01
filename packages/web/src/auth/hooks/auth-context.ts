@@ -11,6 +11,9 @@ export const AuthContext = createContext<AuthContextState>({
   reloadSession: async () => {
     throw new Error('reloadSession not implemented');
   },
+  setToken: () => {
+    throw new Error('setToken not implemented');
+  },
 });
 
 export function useAuthContext() {

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { User } from '../types/user';
 import { getAuthUserInfo } from '../services/auth-user-info';
 import { useSessionStorage } from '@/shared/hooks/session-storage';
+import { sessionExpiredEvent } from '@/shared/constants/events';
 
 export type AuthState =
   | {
@@ -46,6 +47,16 @@ export function useAuth(): AuthState {
     const { user } = await getUser();
     setAuthState({ loading: false, user });
   }
+
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setToken(null);
+    };
+    window.addEventListener(sessionExpiredEvent, handleSessionExpired);
+    return () => {
+      window.removeEventListener(sessionExpiredEvent, handleSessionExpired);
+    };
+  }, [setToken]);
 
   useEffect(() => {
     let mounted = true;

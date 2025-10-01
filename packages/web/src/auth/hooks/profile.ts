@@ -1,14 +1,12 @@
 import { useState, type FormEvent } from 'react';
 import { useAuthUser } from './auth-context';
 import { logout } from '../services/logout';
-import { tokenKey } from '@/shared/constants/session-keys';
 import { toast } from 'sonner';
 import { updateUser } from '../services/update-user';
 import { logoutAll } from '../services/logout-all';
 
 export function useProfile() {
-  const { reloadSession } = useAuthUser();
-  const { user } = useAuthUser();
+  const { reloadSession, user, setToken } = useAuthUser();
   const [saving, setSaving] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [loggingOutAll, setLoggingOutAll] = useState(false);
@@ -35,8 +33,7 @@ export function useProfile() {
     setLoggingOut(true);
     try {
       await logout();
-      sessionStorage.removeItem(tokenKey);
-      await reloadSession();
+      setToken(null);
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
@@ -48,8 +45,7 @@ export function useProfile() {
     setLoggingOutAll(true);
     try {
       await logoutAll();
-      sessionStorage.removeItem(tokenKey);
-      await reloadSession();
+      setToken(null);
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {

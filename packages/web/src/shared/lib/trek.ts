@@ -3,6 +3,7 @@ import { ApiError } from '@/shared/errors/api-error';
 import { TrekError } from '@/shared/errors/trek-error';
 import { tokenKey } from '../constants/session-keys';
 import { getJsonFromSession } from './utils';
+import { sessionExpiredEvent } from '../constants/events';
 
 interface RequestOptions extends RequestInit {
   // Allows consumers to pass any standard fetch options
@@ -54,7 +55,7 @@ async function trekFetch(
       if (response.status === 401) {
         apiMessage =
           'Su sesión ha expirado. Por favor, inicie sesión de nuevo.';
-        window.sessionStorage.removeItem(tokenKey);
+        window.dispatchEvent(new CustomEvent(sessionExpiredEvent));
       }
       throw new ApiError(response.status, apiMessage);
     }
