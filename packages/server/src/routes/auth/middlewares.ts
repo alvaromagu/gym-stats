@@ -25,24 +25,11 @@ export async function authMiddleware(
       401,
     );
   }
+  let decoded: jwt.JwtPayload | undefined = undefined;
   try {
-    const decoded = jwt.verify(token, config.jwtSecret, {
+    decoded = jwt.verify(token, config.jwtSecret, {
       issuer: config.rpID,
     }) as jwt.JwtPayload;
-    const hashedToken = hashToken(token);
-    const dbToken = await tokenRepository.findByHash(hashedToken);
-    if (dbToken == null) {
-      throw new GSApiError(
-        'Unauthorized: Missing or invalid Authorization header.',
-        401,
-      );
-    }
-    req.user = {
-      userId: decoded.userId as string,
-      email: decoded.email as string,
-      fullName: decoded.fullName as string,
-    };
-    next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
       throw new GSApiError(
@@ -52,4 +39,18 @@ export async function authMiddleware(
     }
     throw new GSApiError('Internal Server Error', 500);
   }
+  const hashedToken = hashToken(token);
+  const dbToken = await tokenRepository.findByHash(hashedToken);
+  if (dbToken == null) {
+    throw new GSApiError(
+      'Unauthorized: Missing or invalid Authorization header.',
+      401,
+    );
+  }
+  req.user = {
+    userId: decoded.userId as string,
+    email: decoded.email as string,
+    fullName: decoded.fullName as string,
+  };
+  next();
 }
