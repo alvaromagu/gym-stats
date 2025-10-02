@@ -10,5 +10,5 @@ export async function verifyRegistration({
 }) {
   return await trek.post<{
     verified: boolean;
-  }>('/auth/verify-register', { email, registrationResponse });
+  }>('/auth/register/verify', { email, registrationResponse });
 }

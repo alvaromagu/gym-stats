@@ -3,7 +3,7 @@ import { trek } from '@/shared/lib/trek';
 
 export async function createCredentialRequestOptions({ id }: { id: string }) {
   return await trek.post<PublicKeyCredentialCreationOptionsJSON>(
-    '/auth/create-credential-request-options',
+    '/auth/credential-request/options/generate',
     { id },
   );
 }

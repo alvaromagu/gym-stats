@@ -1,5 +1,9 @@
 import express, { Router } from 'express';
-import { catchErrors, routeLogger } from './routes/index.js';
+import {
+  catchErrors,
+  deviceNameMiddleware,
+  routeLogger,
+} from './routes/index.js';
 import cors from 'cors';
 import { container } from './di/index.js';
 import { registerAuthRoutes } from './routes/auth/auth.route.js';
@@ -18,7 +22,7 @@ expressApp.use(
 );
 
 expressApp.use(express.json());
-expressApp.use(useragent.express());
+expressApp.use(useragent.express(), deviceNameMiddleware);
 
 const containerPromise = container
   .register()

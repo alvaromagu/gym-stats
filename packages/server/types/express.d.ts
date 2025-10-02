@@ -7,5 +7,6 @@ declare module 'express' {
       email: string;
       fullName: string;
     };
+    deviceName?: string;
   }
 }

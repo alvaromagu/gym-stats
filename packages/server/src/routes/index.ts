@@ -6,6 +6,7 @@ import { GSApiError, GSError } from '../contexts/shared/domain/error.js';
 
 import { container } from '../di/index.js';
 import { dirname, join } from 'node:path';
+import type { Details } from 'express-useragent';
 
 const currentModuleDir = dirname(import.meta.url);
 
@@ -92,4 +93,25 @@ export function getToken(req: Request): string | null {
     return null;
   }
   return authHeader?.split(' ')[1] ?? null;
+}
+
+export function userAgentToDeviceName(ua: Details): string {
+  const platform = ua.platform ?? 'Unknown Platform';
+  const os = ua.os ?? 'N/A';
+  const browser = ua.browser ?? 'Unknown Browser';
+  let deviceType = 'Desktop';
+  if (ua.isMobile) deviceType = 'Phone';
+  else if (ua.isTablet) deviceType = 'Tablet';
+  else if (ua.isBot) deviceType = 'Bot';
+  return `${browser} | ${os} (${platform}) | ${deviceType}`;
+}
+
+export async function deviceNameMiddleware(
+  req: Request,
+  _: Response,
+  next: NextFunction,
+) {
+  req.deviceName =
+    req.useragent != null ? userAgentToDeviceName(req.useragent) : 'unknown';
+  next();
 }

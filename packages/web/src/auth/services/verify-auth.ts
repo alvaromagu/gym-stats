@@ -18,7 +18,7 @@ export async function verifyAuth({
   email: string;
   authResponse: AuthenticationResponseJSON;
 }) {
-  return await trek.post<VerifyAuthResponse>('/auth/verify-authentication', {
+  return await trek.post<VerifyAuthResponse>('/auth/auth-options/verify', {
     email,
     authResponse,
   });

@@ -10,5 +10,5 @@ export async function verifyCredentialRequestOptions({
 }) {
   return await trek.post<{
     verified: boolean;
-  }>('/auth/verify-credential-request-options', { id, registrationResponse });
+  }>('/auth/credential-request/options/verify', { id, registrationResponse });
 }

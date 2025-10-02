@@ -5,12 +5,6 @@ import { GSApiError } from '../../contexts/shared/domain/error.js';
 import { container } from '../../di/index.js';
 import { getToken } from '../index.js';
 
-export interface AuthenticatedRequest extends Request {
-  userId: string;
-  email: string;
-  fullName: string;
-}
-
 export async function authMiddleware(
   req: Request,
   _: Response,

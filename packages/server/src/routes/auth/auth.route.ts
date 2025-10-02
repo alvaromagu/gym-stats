@@ -4,18 +4,6 @@ import { body } from 'express-validator';
 import { getToken, validateReqSchema } from '../index.js';
 import { container } from '../../di/index.js';
 import { authMiddleware } from './middlewares.js';
-import type { Details } from 'express-useragent';
-
-function userAgentToDeviceName(ua: Details): string {
-  const platform = ua.platform ?? 'Unknown Platform';
-  const os = ua.os ?? 'N/A';
-  const browser = ua.browser ?? 'Unknown Browser';
-  let deviceType = 'Desktop';
-  if (ua.isMobile) deviceType = 'Phone';
-  else if (ua.isTablet) deviceType = 'Tablet';
-  else if (ua.isBot) deviceType = 'Bot';
-  return `${browser} | ${os} (${platform}) | ${deviceType}`;
-}
 
 export const registerAuthRoutes = (router: Router): void => {
   const registerSchema = [
@@ -43,7 +31,7 @@ export const registerAuthRoutes = (router: Router): void => {
   ];
 
   router.post(
-    '/auth/verify-register',
+    '/auth/register/verify',
     verifyRegisterSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
@@ -55,10 +43,7 @@ export const registerAuthRoutes = (router: Router): void => {
       const result = await userRegistrationVerifier.execute({
         email,
         registrationResponse,
-        deviceName:
-          req.useragent == null
-            ? 'unknown'
-            : userAgentToDeviceName(req.useragent),
+        deviceName: req.deviceName ?? 'unknown',
       });
       res.status(httpStatus.OK).json(result);
     },
@@ -69,7 +54,7 @@ export const registerAuthRoutes = (router: Router): void => {
   ];
 
   router.post(
-    '/auth/generate-authentication-options',
+    '/auth/auth-options/generate',
     authOptsSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
@@ -86,7 +71,7 @@ export const registerAuthRoutes = (router: Router): void => {
   ];
 
   router.post(
-    '/auth/verify-authentication',
+    '/auth/auth-options/verify',
     authVerifySchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
@@ -96,52 +81,6 @@ export const registerAuthRoutes = (router: Router): void => {
       const result = await authVerifier.execute({
         email,
         authResponse,
-      });
-      res.status(httpStatus.OK).json(result);
-    },
-  );
-
-  const createCredentialRequestOptionsSchema = [
-    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
-  ];
-
-  router.post(
-    '/auth/create-credential-request-options',
-    createCredentialRequestOptionsSchema,
-    validateReqSchema,
-    async (req: Request, res: Response) => {
-      const credentialRequestOptionsCreator = container.get(
-        'credentialRequestOptionsCreator',
-      );
-      const optionsJSON = await credentialRequestOptionsCreator.execute({
-        id: req.body.id,
-      });
-      res.status(httpStatus.OK).json(optionsJSON);
-    },
-  );
-
-  const verifyCredentialRequestOptionsSchema = [
-    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
-    body('registrationResponse').exists().isObject(),
-  ];
-
-  router.post(
-    '/auth/verify-credential-request-options',
-    verifyCredentialRequestOptionsSchema,
-    validateReqSchema,
-    async (req: Request, res: Response) => {
-      const credentialRequestOptionsVerifier = container.get(
-        'credentialRequestOptionsVerifier',
-      );
-
-      const { id, registrationResponse } = req.body;
-      const result = await credentialRequestOptionsVerifier.execute({
-        id,
-        registrationResponse,
-        deviceName:
-          req.useragent == null
-            ? 'unknown'
-            : userAgentToDeviceName(req.useragent),
       });
       res.status(httpStatus.OK).json(result);
     },
@@ -300,6 +239,49 @@ export const registerAuthRoutes = (router: Router): void => {
         userId: req.user.userId,
       });
       res.status(httpStatus.NO_CONTENT).send();
+    },
+  );
+
+  const createCredentialRequestOptionsSchema = [
+    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+  ];
+
+  router.post(
+    '/auth/credential-request/options/generate',
+    createCredentialRequestOptionsSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const credentialRequestOptionsCreator = container.get(
+        'credentialRequestOptionsCreator',
+      );
+      const optionsJSON = await credentialRequestOptionsCreator.execute({
+        id: req.body.id,
+      });
+      res.status(httpStatus.OK).json(optionsJSON);
+    },
+  );
+
+  const verifyCredentialRequestOptionsSchema = [
+    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+    body('registrationResponse').exists().isObject(),
+  ];
+
+  router.post(
+    '/auth/credential-request/options/verify',
+    verifyCredentialRequestOptionsSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const credentialRequestOptionsVerifier = container.get(
+        'credentialRequestOptionsVerifier',
+      );
+
+      const { id, registrationResponse } = req.body;
+      const result = await credentialRequestOptionsVerifier.execute({
+        id,
+        registrationResponse,
+        deviceName: req.deviceName ?? 'unknown',
+      });
+      res.status(httpStatus.OK).json(result);
     },
   );
 };
