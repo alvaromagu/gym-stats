@@ -20,9 +20,6 @@ export function useCredentialRequest() {
       const id = credentialRequest.id;
       const url = `${window.location.origin}/link-credential-request/${id}`;
       setUrl(url);
-      toast.success(
-        'Se ha creado una nueva solicitud de credencial. Completa el proceso en tu dispositivo.',
-      );
     }
     setLoading(false);
   }
