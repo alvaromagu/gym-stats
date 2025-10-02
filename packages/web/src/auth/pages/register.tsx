@@ -43,10 +43,16 @@ export function RegisterPage() {
                 required
               />
             </Label>
-            <Button type='submit' disabled={loading}>
-              {loading && <Loader2Icon className='animate-spin size-6' />}
-              Registrar cuenta (se solicitará una clave de acceso)
-            </Button>
+            <div className='flex flex-col gap-2'>
+              <Button type='submit' disabled={loading}>
+                {loading && <Loader2Icon className='animate-spin size-6' />}
+                Registrar cuenta
+              </Button>
+              <p className='text-sm text-center text-muted-foreground'>
+                Al registrarte una nueva cuenta, se solicitará una clave de
+                acceso.
+              </p>
+            </div>
           </form>
         </CardContent>
       </Card>
