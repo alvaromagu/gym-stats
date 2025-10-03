@@ -1,4 +1,4 @@
-import { GSError } from '../../shared/domain/error.js';
+import { GSConflictError } from '../../shared/domain/error.js';
 import { User } from '../domain/user.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import {
@@ -34,7 +34,7 @@ export class UserCreator {
   private async ensureEmailIsUnique(email: string): Promise<void> {
     const user = await this.userRepository.findByEmail(email);
     if (user != null) {
-      throw new GSError('Email already in use');
+      throw new GSConflictError('Email already in use');
     }
   }
 }

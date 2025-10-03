@@ -1,4 +1,4 @@
-import { GSApiError } from '../../shared/domain/error.js';
+import { GSNotFoundError } from '../../shared/domain/error.js';
 import type { UserRepository } from '../domain/user-repository.js';
 
 export class UserFinder {
@@ -11,7 +11,7 @@ export class UserFinder {
   }> {
     const user = await this.userRepository.findById(id);
     if (user == null) {
-      throw new GSApiError('User not found', 404);
+      throw new GSNotFoundError('User not found');
     }
     return { id: user.id, email: user.email, fullName: user.fullName };
   }

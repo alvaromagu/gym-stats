@@ -1,7 +1,9 @@
-import { GSApiError } from '../../../contexts/shared/domain/error.js';
+import {
+  GSConflictError,
+  GSNotFoundError,
+} from '../../../contexts/shared/domain/error.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { Credential } from '../domain/credential.js';
-import httpStatus from 'http-status';
 import { User } from '../domain/user.js';
 
 export class CredentialVerifier {
@@ -16,17 +18,14 @@ export class CredentialVerifier {
   }): Promise<void> {
     const user = await this.userRepository.findById(userId);
     if (user == null) {
-      throw new GSApiError('User not found', httpStatus.NOT_FOUND);
+      throw new GSNotFoundError('User not found');
     }
     const credential = user.credentials.find((c) => c.id === credentialId);
     if (credential == null) {
-      throw new GSApiError('Credential not found', httpStatus.NOT_FOUND);
+      throw new GSNotFoundError('Credential not found');
     }
     if (credential.verified) {
-      throw new GSApiError(
-        'Credential already verified',
-        httpStatus.BAD_REQUEST,
-      );
+      throw new GSConflictError('Credential already verified');
     }
     const updatedCrential = new Credential(
       credential.id,

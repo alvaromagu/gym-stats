@@ -1,5 +1,4 @@
-import httpStatus from 'http-status';
-import { GSApiError } from '../../../contexts/shared/domain/error.js';
+import { GSNotFoundError } from '../../../contexts/shared/domain/error.js';
 import type { UserRepository } from '../domain/user-repository.js';
 
 export class CredentialFinder {
@@ -8,7 +7,7 @@ export class CredentialFinder {
   async execute({ userId }: { userId: string }) {
     const user = await this.userRepository.findById(userId);
     if (user == null) {
-      throw new GSApiError('User not found', httpStatus.NOT_FOUND);
+      throw new GSNotFoundError('User not found');
     }
     const credentials = user.credentials;
     return credentials

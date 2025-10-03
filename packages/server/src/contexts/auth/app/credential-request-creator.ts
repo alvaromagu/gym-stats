@@ -1,4 +1,4 @@
-import { GSApiError } from '../../../contexts/shared/domain/error.js';
+import { GSNotFoundError } from '../../../contexts/shared/domain/error.js';
 import type { CredentialRequestRepository } from '../domain/credential-request-repository.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { CredentialRequest } from '../domain/credential-request.js';
@@ -14,7 +14,7 @@ export class CredentialRequestCreator {
   async execute({ userId }: { userId: string }): Promise<CredentialRequest> {
     const user = await this.userRepository.findById(userId);
     if (user == null) {
-      throw new GSApiError('User not found', 404);
+      throw new GSNotFoundError('User not found');
     }
     const currentCredentialRequest =
       await this.credentialRequestRepository.findByUserId(userId);

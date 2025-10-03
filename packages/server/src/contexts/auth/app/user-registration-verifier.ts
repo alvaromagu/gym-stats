@@ -1,4 +1,4 @@
-import { GSApiError } from '../../shared/domain/error.js';
+import { GSError, GSNotFoundError } from '../../shared/domain/error.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import type { Config } from '../../shared/domain/config.js';
 import {
@@ -29,11 +29,11 @@ export class UserRegistrationVerifier {
   }> {
     const user = await this.userRepository.findByEmail(email);
     if (user == null) {
-      throw new GSApiError('User not found', 404);
+      throw new GSNotFoundError('User not found');
     }
     const currentChallenge = user.currentChallenge;
     if (currentChallenge == null) {
-      throw new GSApiError('No registration challenge found', 400);
+      throw new GSNotFoundError('No registration challenge found');
     }
     let verification: VerifiedRegistrationResponse | undefined = undefined;
     try {
@@ -47,10 +47,7 @@ export class UserRegistrationVerifier {
       verification = await verifyRegistrationResponse(opts);
     } catch (error) {
       const _error = error as Error;
-      throw new GSApiError(
-        `Registration verification failed: ${_error.message}`,
-        400,
-      );
+      throw new GSError(`Registration verification failed: ${_error.message}`);
     }
     const { verified, registrationInfo } = verification;
     if (verified) {

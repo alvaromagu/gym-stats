@@ -1,4 +1,4 @@
-import { GSApiError } from '../../shared/domain/error.js';
+import { GSNotFoundError } from '../../shared/domain/error.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { User } from '../domain/user.js';
 
@@ -14,7 +14,7 @@ export class UserUpdater {
   }): Promise<void> {
     const user = await this.userRepository.findById(id);
     if (user == null) {
-      throw new GSApiError('User not found', 404);
+      throw new GSNotFoundError('User not found');
     }
     const updatedUser = new User(
       user.id,

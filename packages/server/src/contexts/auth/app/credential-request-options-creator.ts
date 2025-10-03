@@ -1,4 +1,7 @@
-import { GSApiError } from '../../../contexts/shared/domain/error.js';
+import {
+  GSGoneError,
+  GSNotFoundError,
+} from '../../../contexts/shared/domain/error.js';
 import type { CredentialRequestRepository } from '../domain/credential-request-repository.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import type { Config } from '../../../contexts/shared/domain/config.js';
@@ -24,15 +27,15 @@ export class CredentialRequestOptionsCreator {
     const credentialRequest =
       await this.credentialRequestRepository.findById(id);
     if (credentialRequest == null) {
-      throw new GSApiError('No se encontró la solicitud de credencial', 404);
+      throw new GSNotFoundError('No se encontró la solicitud de credencial');
     }
     const user = await this.userRepository.findById(credentialRequest.userId);
     if (user == null) {
-      throw new GSApiError('No se encontró el usuario asociado', 404);
+      throw new GSNotFoundError('No se encontró el usuario asociado');
     }
     const now = new Date();
     if (credentialRequest.expiresAt < now) {
-      throw new GSApiError('La solicitud de credencial ha expirado', 400);
+      throw new GSGoneError('La solicitud de credencial ha expirado');
     }
     const options = await generateRegistrationOptions({
       ...getRegistrationOptions({ email: user.email, config: this.config }),

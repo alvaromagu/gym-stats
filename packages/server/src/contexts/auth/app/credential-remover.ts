@@ -1,8 +1,10 @@
-import { GSApiError } from '../../../contexts/shared/domain/error.js';
+import {
+  GSNotFoundError,
+  GSPreconditionFailedError,
+} from '../../../contexts/shared/domain/error.js';
 import type { TokenRepository } from '../domain/token-repository.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import { User } from '../domain/user.js';
-import httpStatus from 'http-status';
 
 export class CredentialRemover {
   constructor(
@@ -19,18 +21,17 @@ export class CredentialRemover {
   }): Promise<void> {
     const user = await this.userRepository.findById(userId);
     if (user == null) {
-      throw new GSApiError('User not found', httpStatus.NOT_FOUND);
+      throw new GSNotFoundError('User not found');
     }
     const credential = user.credentials.find(
       (cred) => cred.id === credentialId,
     );
     if (credential == null) {
-      throw new GSApiError('Credential not found', httpStatus.NOT_FOUND);
+      throw new GSNotFoundError('Credential not found');
     }
     if (user.credentials.length <= 1) {
-      throw new GSApiError(
+      throw new GSPreconditionFailedError(
         'Cannot remove the only credential. User must have at least one credential.',
-        httpStatus.PRECONDITION_FAILED,
       );
     }
     const updatedUser = new User(

@@ -1,4 +1,4 @@
-import { GSApiError } from '../../shared/domain/error.js';
+import { GSNotFoundError } from '../../shared/domain/error.js';
 import { User } from '../domain/user.js';
 import type { UserRepository } from '../domain/user-repository.js';
 import {
@@ -21,7 +21,7 @@ export class AuthOptsCreator {
   }): Promise<PublicKeyCredentialRequestOptionsJSON> {
     const user = await this.userRepository.findByEmail(email);
     if (user == null) {
-      throw new GSApiError('User not found', 404);
+      throw new GSNotFoundError('User not found');
     }
     const opts = this.getAuthOpts(user);
     const optionsJSON = await generateAuthenticationOptions(opts);

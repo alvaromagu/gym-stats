@@ -2,7 +2,14 @@ import type { NextFunction, Router, Request, Response } from 'express';
 import { glob } from 'glob';
 import { validationResult } from 'express-validator';
 import httpStatus from 'http-status';
-import { GSApiError, GSError } from '../contexts/shared/domain/error.js';
+import {
+  GSApiError,
+  GSConflictError,
+  GSError,
+  GSGoneError,
+  GSNotFoundError,
+  GSPreconditionFailedError,
+} from '../contexts/shared/domain/error.js';
 
 import { container } from '../di/index.js';
 import { dirname, join } from 'node:path';
@@ -62,19 +69,42 @@ export function catchErrors(
   __: NextFunction,
 ): void {
   const logger = container.get('logger');
-  console.log(err);
   logger.error(err);
   if (err instanceof GSApiError) {
     res.status(err.status).json({ errors: [{ message: err.message }] });
-  } else if (err instanceof GSError) {
-    res
-      .status(httpStatus.BAD_REQUEST)
-      .json({ errors: [{ message: err.message }] });
-  } else {
-    res
-      .status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({ errors: [{ message: 'Unexpected server error' }] });
+    return;
   }
+  if (err instanceof GSNotFoundError) {
+    res
+      .status(httpStatus.NOT_FOUND)
+      .json({ errors: [{ message: err.message }] });
+    return;
+  }
+  if (err instanceof GSConflictError) {
+    res
+      .status(httpStatus.CONFLICT)
+      .json({ errors: [{ message: err.message }] });
+    return;
+  }
+  if (err instanceof GSGoneError) {
+    res.status(httpStatus.GONE).json({ errors: [{ message: err.message }] });
+    return;
+  }
+  if (err instanceof GSPreconditionFailedError) {
+    res
+      .status(httpStatus.PRECONDITION_FAILED)
+      .json({ errors: [{ message: err.message }] });
+    return;
+  }
+  if (err instanceof GSError) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      errors: [{ message: err.message ?? 'Unexpected server error' }],
+    });
+    return;
+  }
+  res
+    .status(httpStatus.INTERNAL_SERVER_ERROR)
+    .json({ errors: [{ message: 'Unexpected server error' }] });
 }
 
 export function routeLogger(

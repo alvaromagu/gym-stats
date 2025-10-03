@@ -1,6 +1,10 @@
 import type { UserRepository } from '../domain/user-repository.js';
 import type { Config } from '../../shared/domain/config.js';
-import { GSApiError } from '../../../contexts/shared/domain/error.js';
+import {
+  GSError,
+  GSNotFoundError,
+  GSPreconditionFailedError,
+} from '../../../contexts/shared/domain/error.js';
 import {
   verifyAuthenticationResponse,
   type AuthenticationResponseJSON,
@@ -39,22 +43,21 @@ export class AuthVerifier {
   }): Promise<AuthVerifierResponse> {
     const user = await this.userRepository.findByEmail(email);
     if (user == null) {
-      throw new GSApiError('User not found', 404);
+      throw new GSNotFoundError('User not found');
     }
     if (user.currentChallenge == null) {
-      throw new GSApiError('No authentication challenge found', 400);
+      throw new GSNotFoundError('No authentication challenge found');
     }
     const credential = user.credentials.find(
       (cred: { id: string }) => cred.id === authResponse.id,
     );
     if (credential == null) {
-      throw new GSApiError(
+      throw new GSNotFoundError(
         'Authenticator is not registered with this site',
-        400,
       );
     }
     if (!credential.verified) {
-      throw new GSApiError('Authenticator is not verified', 400);
+      throw new GSPreconditionFailedError('Authenticator is not verified');
     }
     let verification: VerifiedAuthenticationResponse | undefined = undefined;
     try {
@@ -74,10 +77,7 @@ export class AuthVerifier {
       verification = await verifyAuthenticationResponse(opts);
     } catch (error) {
       const _error = error as Error;
-      throw new GSApiError(
-        `Registration verification failed: ${_error.message}`,
-        400,
-      );
+      throw new GSError(`Registration verification failed: ${_error.message}`);
     }
     const { verified, authenticationInfo } = verification;
     if (verified) {
@@ -115,7 +115,7 @@ export class AuthVerifier {
         tokenStr = jwt.sign(payload, this.config.jwtSecret, options);
       } catch (error) {
         const _error = error as Error;
-        throw new GSApiError(`JWT sign error: ${_error.message}`, 500);
+        throw new GSError(`JWT sign error: ${_error.message}`);
       }
       const token = this.getToken({
         user,
@@ -139,10 +139,7 @@ export class AuthVerifier {
   }): Token {
     const decoded = jwt.decode(tokenStr) as jwt.JwtPayload | null;
     if (decoded?.exp == null) {
-      throw new GSApiError(
-        'JWT generated without a valid expiration time.',
-        400,
-      );
+      throw new GSError('JWT generated without a valid expiration time.');
     }
     const expiresAt = new Date(decoded.exp * 1000);
     return new Token(
