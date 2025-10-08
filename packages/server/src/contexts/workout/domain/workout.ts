@@ -4,6 +4,36 @@ import type {
 } from '../../../contexts/shared/domain/primitives.js';
 import { Aggregate } from '../../../contexts/shared/domain/aggregate.js';
 
+function validateId(id: string): void {
+  if (typeof id !== 'string') {
+    throw new Error('Invalid id: must be a string');
+  }
+  if (id.trim().length === 0) {
+    throw new Error('Invalid id: cannot be empty');
+  }
+}
+
+function validateUserId(userId: string): void {
+  if (typeof userId !== 'string') {
+    throw new Error('Invalid userId: must be a string');
+  }
+  if (userId.trim().length === 0) {
+    throw new Error('Invalid userId: cannot be empty');
+  }
+}
+
+function validateDate(date: Date): void {
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    throw new Error('Invalid date: must be a valid Date object');
+  }
+}
+
+function validateNotes(notes: string | null): void {
+  if (notes !== null && typeof notes !== 'string') {
+    throw new Error('Invalid notes: must be a string or null');
+  }
+}
+
 export class Workout extends Aggregate {
   constructor(
     readonly id: string,
@@ -12,6 +42,10 @@ export class Workout extends Aggregate {
     readonly notes: string | null,
   ) {
     super();
+    validateId(id);
+    validateUserId(userId);
+    validateDate(date);
+    validateNotes(notes);
   }
 
   static fromPrimitives(primitives: Primitives<Workout>): Workout {
