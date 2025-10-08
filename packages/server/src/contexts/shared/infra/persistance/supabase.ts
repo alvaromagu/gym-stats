@@ -49,10 +49,83 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'user-credential-requests_user_id_fkey';
+            foreignKeyName: 'user_credential_requests_user_id_fkey';
             columns: ['user_id'];
-            isOneToOne: false;
+            isOneToOne: true;
             referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      exercises: {
+        Row: {
+          id: string;
+          name: string;
+          sort_order: number;
+          workout_id: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          sort_order: number;
+          workout_id: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          sort_order?: number;
+          workout_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'exercises_workout_id_fkey';
+            columns: ['workout_id'];
+            isOneToOne: false;
+            referencedRelation: 'workouts';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      sets: {
+        Row: {
+          exercise_id: string;
+          group_id: string | null;
+          id: string;
+          notes: string | null;
+          repetitions: number;
+          rpe: number | null;
+          set_number: number;
+          to_failure: boolean | null;
+          weight_kg: number;
+        };
+        Insert: {
+          exercise_id: string;
+          group_id?: string | null;
+          id?: string;
+          notes?: string | null;
+          repetitions: number;
+          rpe?: number | null;
+          set_number: number;
+          to_failure?: boolean | null;
+          weight_kg: number;
+        };
+        Update: {
+          exercise_id?: string;
+          group_id?: string | null;
+          id?: string;
+          notes?: string | null;
+          repetitions?: number;
+          rpe?: number | null;
+          set_number?: number;
+          to_failure?: boolean | null;
+          weight_kg?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'sets_exercise_id_fkey';
+            columns: ['exercise_id'];
+            isOneToOne: false;
+            referencedRelation: 'exercises';
             referencedColumns: ['id'];
           },
         ];
@@ -115,6 +188,35 @@ export interface Database {
           id?: string;
         };
         Relationships: [];
+      };
+      workouts: {
+        Row: {
+          date: string;
+          id: string;
+          notes: string | null;
+          user_id: string;
+        };
+        Insert: {
+          date?: string;
+          id?: string;
+          notes?: string | null;
+          user_id: string;
+        };
+        Update: {
+          date?: string;
+          id?: string;
+          notes?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'workouts_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
       };
     };
     Views: Record<never, never>;
