@@ -193,18 +193,21 @@ export interface Database {
         Row: {
           date: string;
           id: string;
+          name: string;
           notes: string | null;
           user_id: string;
         };
         Insert: {
           date?: string;
           id?: string;
+          name: string;
           notes?: string | null;
           user_id: string;
         };
         Update: {
           date?: string;
           id?: string;
+          name?: string;
           notes?: string | null;
           user_id?: string;
         };

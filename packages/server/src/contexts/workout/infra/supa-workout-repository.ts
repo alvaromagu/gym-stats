@@ -61,20 +61,23 @@ export class SupaWorkoutRepository
     return {
       id: primitives.id,
       user_id: primitives.userId,
+      name: primitives.name,
       date: primitives.date,
       notes: primitives.notes,
     };
   }
 
   private mapToDomain(data: {
-    date: string;
     id: string;
-    notes: string | null;
     user_id: string;
+    name: string;
+    date: string;
+    notes: string | null;
   }): Workout {
     return Workout.fromPrimitives({
       id: data.id,
       userId: data.user_id,
+      name: data.name,
       date: data.date as ISODateTime,
       notes: data.notes,
     });

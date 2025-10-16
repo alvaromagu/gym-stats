@@ -22,6 +22,15 @@ function validateUserId(userId: string): void {
   }
 }
 
+function validateName(name: string): void {
+  if (typeof name !== 'string') {
+    throw new Error('Invalid name: must be a string');
+  }
+  if (name.trim().length === 0) {
+    throw new Error('Invalid name: cannot be empty');
+  }
+}
+
 function validateDate(date: Date): void {
   if (!(date instanceof Date) || isNaN(date.getTime())) {
     throw new Error('Invalid date: must be a valid Date object');
@@ -38,12 +47,14 @@ export class Workout extends Aggregate {
   constructor(
     readonly id: string,
     readonly userId: string,
+    readonly name: string,
     readonly date: Date,
     readonly notes: string | null,
   ) {
     super();
     validateId(id);
     validateUserId(userId);
+    validateName(name);
     validateDate(date);
     validateNotes(notes);
   }
@@ -52,6 +63,7 @@ export class Workout extends Aggregate {
     return new Workout(
       primitives.id,
       primitives.userId,
+      primitives.name,
       new Date(primitives.date),
       primitives.notes,
     );
@@ -61,6 +73,7 @@ export class Workout extends Aggregate {
     return new Workout(
       this.id,
       this.userId,
+      changes.name ?? this.name,
       changes.date ?? this.date,
       changes.notes ?? this.notes,
     );
@@ -70,6 +83,7 @@ export class Workout extends Aggregate {
     return {
       id: this.id,
       userId: this.userId,
+      name: this.name,
       date: this.date.toISOString() as ISODateTime,
       notes: this.notes,
     };

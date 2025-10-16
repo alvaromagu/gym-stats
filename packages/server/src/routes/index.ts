@@ -7,6 +7,7 @@ import {
   GSConflictError,
   GSError,
   GSGoneError,
+  GSForbiddenError,
   GSNotFoundError,
   GSPreconditionFailedError,
 } from '../contexts/shared/domain/error.js';
@@ -80,6 +81,13 @@ export function catchErrors(
       .json({ errors: [{ message: err.message }] });
     return;
   }
+  if (err instanceof GSForbiddenError) {
+    res
+      .status(httpStatus.FORBIDDEN)
+      .json({ errors: [{ message: err.message }] });
+    return;
+  }
+
   if (err instanceof GSConflictError) {
     res
       .status(httpStatus.CONFLICT)

@@ -2,6 +2,8 @@ export class GSError extends Error {}
 
 export class GSNotFoundError extends GSError {}
 
+export class GSForbiddenError extends GSError {}
+
 export class GSConflictError extends GSError {}
 
 export class GSGoneError extends GSError {}
