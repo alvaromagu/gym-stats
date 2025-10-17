@@ -2,7 +2,7 @@ import { Switch, Link, Route, Redirect } from 'wouter';
 import { Button } from './shared/components/ui/button';
 import { useAuthContext } from './auth/hooks/auth-context';
 import { Home, User } from 'lucide-react';
-import { HomePage } from './dashboard/pages/home';
+import { WorkoutsPage } from './workout/pages/workouts';
 import { ProfilePage } from './auth/pages/profile';
 import { LoginPage } from './auth/pages/login';
 import { RegisterPage } from './auth/pages/register';
@@ -24,7 +24,7 @@ export function Routes() {
           path='/link-credential-request/:id'
           component={LinkCredentialRequestPage}
         />
-        <AuthRoute protected path='/' component={HomePage} />
+        <AuthRoute protected path='/' component={WorkoutsPage} />
         <AuthRoute protected path='/profile' component={ProfilePage} />
         <AuthRoute
           protected
