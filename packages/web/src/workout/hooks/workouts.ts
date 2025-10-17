@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getWorkotus } from '../services/get-workouts';
+import type { WorkoutListItem } from '../types/workout-list';
 
 export function useWorkouts() {
   const [loading, setLoading] = useState(false);
-  const [workouts, setWorkouts] = useState([]);
+  const [workouts, setWorkouts] = useState<WorkoutListItem[]>([]);
 
   useEffect(() => {
     let mounted = true;

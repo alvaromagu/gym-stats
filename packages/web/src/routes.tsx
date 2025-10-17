@@ -9,6 +9,7 @@ import { RegisterPage } from './auth/pages/register';
 import { AuthRoute } from './auth/components/auth-route';
 import { CredentialsPage } from './auth/pages/credentials';
 import { LinkCredentialRequestPage } from './auth/pages/link-credential-request';
+import { NewWorkoutPage } from './workout/pages/new-workout';
 
 export function Routes() {
   const { loading, hasToken, authenticated } = useAuthContext();
@@ -25,6 +26,7 @@ export function Routes() {
           component={LinkCredentialRequestPage}
         />
         <AuthRoute protected path='/' component={WorkoutsPage} />
+        <AuthRoute protected path='/workouts/new' component={NewWorkoutPage} />
         <AuthRoute protected path='/profile' component={ProfilePage} />
         <AuthRoute
           protected

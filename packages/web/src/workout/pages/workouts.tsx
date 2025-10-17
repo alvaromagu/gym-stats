@@ -35,14 +35,14 @@ export function WorkoutsPage() {
               )}
 
             {!loading &&
-              workouts.map((credential, index) => (
-                <li key={index}>TODO: Create workout list item component</li>
+              workouts.map((workout) => (
+                <li key={workout.id}>{workout.name}</li>
               ))}
           </ul>
           <Button asChild className='w-full'>
             <Link to='/workouts/new'>
               <Dumbbell />
-              ¡Comienza a registrar tus entrenamientos!
+              Registrar nuevo entrenamiento
             </Link>
           </Button>
         </>
