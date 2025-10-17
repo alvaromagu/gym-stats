@@ -47,6 +47,18 @@ export class SupaSetRepository extends SupaRepository implements SetRepository {
     return this.mapToDomain(data);
   }
 
+  async findByExerciseId(exerciseId: string): Promise<Set[]> {
+    const { data, error } = await this.client
+      .from('sets')
+      .select()
+      .eq('exercise_id', exerciseId)
+      .order('set_number', { ascending: true });
+    if (error != null) {
+      throw error;
+    }
+    return data.map((item) => this.mapToDomain(item));
+  }
+
   private mapToDb(set: Set) {
     const primitives = set.toPrimitives();
     return {

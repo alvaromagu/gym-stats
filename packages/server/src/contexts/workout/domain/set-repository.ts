@@ -5,4 +5,5 @@ export interface SetRepository {
   update: (set: Set) => Promise<void>;
   delete: (setId: string) => Promise<void>;
   findById: (setId: string) => Promise<Set | null>;
+  findByExerciseId: (exerciseId: string) => Promise<Set[]>;
 }

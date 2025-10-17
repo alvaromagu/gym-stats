@@ -46,6 +46,9 @@ import { ExerciseUpdater } from '@/contexts/workout/app/exercise-updater.js';
 import { ExerciseRemover } from '@/contexts/workout/app/exercise-remover.js';
 import { SetRemover } from '@/contexts/workout/app/set-remover.js';
 import { SupaSetRepository } from '@/contexts/workout/infra/supa-set-repository.js';
+import { WorkoutFinder } from '@/contexts/workout/app/workout-finder.js';
+import { WorkoutDetailFinder } from '@/contexts/workout/app/workout-detail-finder.js';
+import type { ExerciseDetailFinder } from '@/contexts/workout/app/exercise-detail-finder.js';
 
 interface Dependencies {
   logger: Logger;
@@ -75,9 +78,12 @@ interface Dependencies {
   workoutCreator: WorkoutCreator;
   workoutUpdater: WorkoutUpdater;
   workoutRemover: WorkoutRemover;
+  workoutFinder: WorkoutFinder;
+  workoutDetailFinder: WorkoutDetailFinder;
   exerciseCreator: ExerciseCreator;
   exerciseUpdater: ExerciseUpdater;
   exerciseRemover: ExerciseRemover;
+  exerciseDetailFinder: ExerciseDetailFinder;
   setRemover: SetRemover;
 }
 
@@ -129,9 +135,11 @@ export class Container {
       workoutCreator: asClass(WorkoutCreator).singleton(),
       workoutUpdater: asClass(WorkoutUpdater).singleton(),
       workoutRemover: asClass(WorkoutRemover).singleton(),
+      workoutFinder: asClass(WorkoutFinder).singleton(),
       exerciseCreator: asClass(ExerciseCreator).singleton(),
       exerciseUpdater: asClass(ExerciseUpdater).singleton(),
       exerciseRemover: asClass(ExerciseRemover).singleton(),
+      workoutDetailFinder: asClass(WorkoutDetailFinder).singleton(),
       setRemover: asClass(SetRemover).singleton(),
     });
   }

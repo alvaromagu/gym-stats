@@ -1,8 +1,9 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import { authMiddleware } from '../auth/middlewares.js';
 import type { Request, Response, Router } from 'express';
 import httpStatus from 'http-status';
 import { container } from '@/di/index.js';
+import { validateReqSchema } from '../index.js';
 
 export const registerWorkoutRoutes = (router: Router): void => {
   router.use('/workouts', authMiddleware);
@@ -15,6 +16,7 @@ export const registerWorkoutRoutes = (router: Router): void => {
   router.post(
     '/workouts',
     workoutCreateSchema,
+    validateReqSchema,
     async (req: Request, res: Response) => {
       const workoutCreator = container.get('workoutCreator');
       const { name, date } = req.body;
@@ -37,6 +39,7 @@ export const registerWorkoutRoutes = (router: Router): void => {
   router.put(
     '/workouts',
     workoutUpdateSchema,
+    validateReqSchema,
     async (req: Request, res: Response) => {
       const workoutUpdater = container.get('workoutUpdater');
       const { id, name, date, notes } = req.body;
@@ -56,6 +59,7 @@ export const registerWorkoutRoutes = (router: Router): void => {
   router.delete(
     '/workouts',
     workoutDeleteSchema,
+    validateReqSchema,
     async (req: Request, res: Response) => {
       const workoutRemover = container.get('workoutRemover');
       const { id } = req.body;
@@ -65,6 +69,39 @@ export const registerWorkoutRoutes = (router: Router): void => {
       }
       await workoutRemover.execute({ id, userId });
       res.status(204).send();
+    },
+  );
+
+  router.get('/workouts', async (req: Request, res: Response) => {
+    const workoutFinder = container.get('workoutFinder');
+    const userId = req.user?.userId;
+    if (userId == null) {
+      return res.status(httpStatus.BAD_REQUEST).send();
+    }
+    const result = await workoutFinder.execute({ userId });
+    res.status(200).json(result);
+  });
+
+  const workoutDetailSchema = [
+    param('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+  ];
+
+  router.get(
+    '/workouts/:id',
+    workoutDetailSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const workoutDetailFinder = container.get('workoutDetailFinder');
+      const { id } = req.params;
+      const userId = req.user?.userId;
+      if (userId == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const result = await workoutDetailFinder.execute({
+        workoutId: id,
+        userId,
+      });
+      res.status(200).json(result);
     },
   );
 
@@ -86,6 +123,7 @@ export const registerWorkoutRoutes = (router: Router): void => {
   router.post(
     '/workouts/exercises',
     exerciseCreateSchema,
+    validateReqSchema,
     async (req: Request, res: Response) => {
       const exerciseCreator = container.get('exerciseCreator');
       const { workoutId, name, sets } = req.body;
@@ -122,6 +160,7 @@ export const registerWorkoutRoutes = (router: Router): void => {
   router.put(
     '/workouts/exercises',
     exerciseUpdateSchema,
+    validateReqSchema,
     async (req: Request, res: Response) => {
       const exerciseUpdater = container.get('exerciseUpdater');
       const { id, name, sets } = req.body;
@@ -141,6 +180,7 @@ export const registerWorkoutRoutes = (router: Router): void => {
   router.delete(
     '/workouts/exercises',
     exerciseDeleteSchema,
+    validateReqSchema,
     async (req: Request, res: Response) => {
       const exerciseRemover = container.get('exerciseRemover');
       const { id } = req.body;
@@ -153,6 +193,29 @@ export const registerWorkoutRoutes = (router: Router): void => {
     },
   );
 
+  const exerciseDetailSchema = [
+    param('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+  ];
+
+  router.get(
+    '/workouts/exercises/:id',
+    exerciseDetailSchema,
+    validateReqSchema,
+    async (req: Request, res: Response) => {
+      const exerciseDetailFinder = container.get('exerciseDetailFinder');
+      const { id } = req.params;
+      const userId = req.user?.userId;
+      if (userId == null) {
+        return res.status(httpStatus.BAD_REQUEST).send();
+      }
+      const result = await exerciseDetailFinder.execute({
+        userId,
+        exerciseId: id,
+      });
+      res.status(200).json(result);
+    },
+  );
+
   const setDeleteSchema = [
     body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
   ];
@@ -160,6 +223,7 @@ export const registerWorkoutRoutes = (router: Router): void => {
   router.delete(
     '/workouts/sets',
     setDeleteSchema,
+    validateReqSchema,
     async (req: Request, res: Response) => {
       const setRemover = container.get('setRemover');
       const { id } = req.body;

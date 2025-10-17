@@ -56,6 +56,17 @@ export class SupaWorkoutRepository
     return this.mapToDomain(data);
   }
 
+  async findByUserId(userId: string): Promise<Workout[]> {
+    const { data, error } = await this.client
+      .from('workouts')
+      .select()
+      .eq('user_id', userId);
+    if (error != null) {
+      throw error;
+    }
+    return data.map((item) => this.mapToDomain(item));
+  }
+
   private mapToDb(workout: Workout) {
     const primitives = workout.toPrimitives();
     return {

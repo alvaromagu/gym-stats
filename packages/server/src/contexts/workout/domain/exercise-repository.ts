@@ -5,4 +5,5 @@ export interface ExerciseRepository {
   update: (exercise: Exercise) => Promise<void>;
   delete: (exerciseId: string) => Promise<void>;
   findById: (exerciseId: string) => Promise<Exercise | null>;
+  findByWorkoutId: (workoutId: string) => Promise<Exercise[]>;
 }
