@@ -1,7 +1,7 @@
-import { SupaRepository } from '@/contexts/shared/infra/persistance/supa-repository.js';
+import { SupaRepository } from '../../../contexts/shared/infra/persistance/supa-repository.js';
 import type { WorkoutRepository } from '../domain/workout-repository.js';
 import { Workout } from '../domain/workout.js';
-import type { ISODateTime } from '@/contexts/shared/domain/primitives.js';
+import type { ISODateTime } from '../../../contexts/shared/domain/primitives.js';
 
 export class SupaWorkoutRepository
   extends SupaRepository

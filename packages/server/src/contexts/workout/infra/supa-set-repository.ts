@@ -1,4 +1,4 @@
-import { SupaRepository } from '@/contexts/shared/infra/persistance/supa-repository.js';
+import { SupaRepository } from '../../../contexts/shared/infra/persistance/supa-repository.js';
 import type { SetRepository } from '../domain/set-repository.js';
 import { Set } from '../domain/set.js';
 

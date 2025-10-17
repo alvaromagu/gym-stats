@@ -2,7 +2,7 @@ import { body, param } from 'express-validator';
 import { authMiddleware } from '../auth/middlewares.js';
 import type { Request, Response, Router } from 'express';
 import httpStatus from 'http-status';
-import { container } from '@/di/index.js';
+import { container } from '../../di/index.js';
 import { validateReqSchema } from '../index.js';
 
 export const registerWorkoutRoutes = (router: Router): void => {

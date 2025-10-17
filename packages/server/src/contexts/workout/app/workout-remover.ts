@@ -1,7 +1,7 @@
 import {
   GSForbiddenError,
   GSNotFoundError,
-} from '@/contexts/shared/domain/error.js';
+} from '../../../contexts/shared/domain/error.js';
 import type { WorkoutRepository } from '../domain/workout-repository.js';
 
 export class WorkoutRemover {

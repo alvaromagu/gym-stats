@@ -1,7 +1,7 @@
 import {
   GSForbiddenError,
   GSNotFoundError,
-} from '@/contexts/shared/domain/error.js';
+} from '../../../contexts/shared/domain/error.js';
 import type { ExerciseRepository } from '../domain/exercise-repository.js';
 import type { SetRepository } from '../domain/set-repository.js';
 import type { WorkoutRepository } from '../domain/workout-repository.js';

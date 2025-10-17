@@ -1,4 +1,4 @@
-import { SupaRepository } from '@/contexts/shared/infra/persistance/supa-repository.js';
+import { SupaRepository } from '../../../contexts/shared/infra/persistance/supa-repository.js';
 import type { ExerciseRepository } from '../domain/exercise-repository.js';
 import { Exercise } from '../domain/exercise.js';
 

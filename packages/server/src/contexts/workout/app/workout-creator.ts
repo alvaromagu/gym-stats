@@ -1,4 +1,4 @@
-import type { ISODateTime } from '@/contexts/shared/domain/primitives.js';
+import type { ISODateTime } from '../../../contexts/shared/domain/primitives.js';
 import type { WorkoutRepository } from '../domain/workout-repository.js';
 import { Workout } from '../domain/workout.js';
 
