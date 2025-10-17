@@ -9,6 +9,7 @@ import { container } from './di/index.js';
 import { registerAuthRoutes } from './routes/auth/auth.route.js';
 import type { AddressInfo } from 'node:net';
 import useragent from 'express-useragent';
+import { registerWorkoutRoutes } from './routes/workout/workout.route.js';
 
 const expressApp = express();
 const router = Router();
@@ -41,6 +42,7 @@ expressApp.use(async (_, __, next) => {
 
 expressApp.use(routeLogger);
 registerAuthRoutes(router);
+registerWorkoutRoutes(router);
 expressApp.use(router);
 expressApp.use(catchErrors);
 
