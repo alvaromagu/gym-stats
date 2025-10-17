@@ -33,6 +33,19 @@ import { SupaCredentialRequestRepository } from '../contexts/auth/infra/supa-cre
 import { CredentialRequestOptionsCreator } from '../contexts/auth/app/credential-request-options-creator.js';
 import { CredentialRequestOptionsVerifier } from '../contexts/auth/app/credential-request-options-verifier.js';
 import { CredentialRequestRemover } from '../contexts/auth/app/credential-request-remover.js';
+import { SupaExerciseRepository } from '@/contexts/workout/infra/supa-exercise-repository.js';
+import { SupaWorkoutRepository } from '@/contexts/workout/infra/supa-workout-repository.js';
+import type { SetRepository } from '@/contexts/workout/domain/set-repository.js';
+import type { ExerciseRepository } from '@/contexts/workout/domain/exercise-repository.js';
+import type { WorkoutRepository } from '@/contexts/workout/domain/workout-repository.js';
+import { WorkoutCreator } from '@/contexts/workout/app/workout-creator.js';
+import { WorkoutUpdater } from '@/contexts/workout/app/workout-updater.js';
+import { WorkoutRemover } from '@/contexts/workout/app/workout-remover.js';
+import { ExerciseCreator } from '@/contexts/workout/app/exercise-creator.js';
+import { ExerciseUpdater } from '@/contexts/workout/app/exercise-updater.js';
+import { ExerciseRemover } from '@/contexts/workout/app/exercise-remover.js';
+import { SetRemover } from '@/contexts/workout/app/set-remover.js';
+import { SupaSetRepository } from '@/contexts/workout/infra/supa-set-repository.js';
 
 interface Dependencies {
   logger: Logger;
@@ -55,6 +68,17 @@ interface Dependencies {
   credentialRequestOptionsCreator: CredentialRequestOptionsCreator;
   credentialRequestOptionsVerifier: CredentialRequestOptionsVerifier;
   credentialRequestRemover: CredentialRequestRemover;
+
+  workoutRepository: WorkoutRepository;
+  exerciseRepository: ExerciseRepository;
+  setRepository: SetRepository;
+  workoutCreator: WorkoutCreator;
+  workoutUpdater: WorkoutUpdater;
+  workoutRemover: WorkoutRemover;
+  exerciseCreator: ExerciseCreator;
+  exerciseUpdater: ExerciseUpdater;
+  exerciseRemover: ExerciseRemover;
+  setRemover: SetRemover;
 }
 
 export class Container {
@@ -94,6 +118,21 @@ export class Container {
         CredentialRequestOptionsVerifier,
       ).singleton(),
       credentialRequestRemover: asClass(CredentialRequestRemover).singleton(),
+
+      workoutRepository: asClass<WorkoutRepository>(
+        SupaWorkoutRepository,
+      ).singleton(),
+      exerciseRepository: asClass<ExerciseRepository>(
+        SupaExerciseRepository,
+      ).singleton(),
+      setRepository: asClass<SetRepository>(SupaSetRepository).singleton(),
+      workoutCreator: asClass(WorkoutCreator).singleton(),
+      workoutUpdater: asClass(WorkoutUpdater).singleton(),
+      workoutRemover: asClass(WorkoutRemover).singleton(),
+      exerciseCreator: asClass(ExerciseCreator).singleton(),
+      exerciseUpdater: asClass(ExerciseUpdater).singleton(),
+      exerciseRemover: asClass(ExerciseRemover).singleton(),
+      setRemover: asClass(SetRemover).singleton(),
     });
   }
 
