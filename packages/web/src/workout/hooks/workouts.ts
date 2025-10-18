@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getWorkotus } from '../services/get-workouts';
-import type { WorkoutListItem } from '../types/workout-list';
+import type { Workout } from '../types/workout-list';
 
 export function useWorkouts() {
   const [loading, setLoading] = useState(false);
-  const [workouts, setWorkouts] = useState<WorkoutListItem[]>([]);
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -17,7 +17,7 @@ export function useWorkouts() {
       if (!mounted) {
         return;
       }
-      setWorkouts(workouts as []);
+      setWorkouts(workouts);
       setLoading(false);
     })();
     return () => {
@@ -25,8 +25,14 @@ export function useWorkouts() {
     };
   }, []);
 
+  async function reload() {
+    const workouts = await getWorkotus();
+    setWorkouts(workouts);
+  }
+
   return {
     loading,
     workouts,
+    reload,
   };
 }

@@ -1,4 +1,4 @@
-export interface WorkoutListItem {
+export interface Workout {
   id: string;
   userId: string;
   name: string;

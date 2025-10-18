@@ -1,6 +1,6 @@
 import { trek } from '@/shared/lib/trek';
-import type { WorkoutListItem } from '../types/workout-list';
+import type { Workout } from '../types/workout-list';
 
 export async function getWorkotus() {
-  return await trek.get<WorkoutListItem[]>('/workouts');
+  return await trek.get<Workout[]>('/workouts');
 }

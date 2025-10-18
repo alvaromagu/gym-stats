@@ -53,16 +53,16 @@ export const registerWorkoutRoutes = (router: Router): void => {
   );
 
   const workoutDeleteSchema = [
-    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+    param('id').exists().isString().notEmpty({ ignore_whitespace: true }),
   ];
 
   router.delete(
-    '/workouts',
+    '/workouts/:id',
     workoutDeleteSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
       const workoutRemover = container.get('workoutRemover');
-      const { id } = req.body;
+      const { id } = req.params;
       const userId = req.user?.userId;
       if (userId == null) {
         return res.status(httpStatus.BAD_REQUEST).send();
