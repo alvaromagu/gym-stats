@@ -29,20 +29,31 @@ export const registerWorkoutRoutes = (router: Router): void => {
     },
   );
 
+  router.get('/workouts', async (req: Request, res: Response) => {
+    const workoutFinder = container.get('workoutFinder');
+    const userId = req.user?.userId;
+    if (userId == null) {
+      return res.status(httpStatus.BAD_REQUEST).send();
+    }
+    const result = await workoutFinder.execute({ userId });
+    res.status(200).json(result);
+  });
+
   const workoutUpdateSchema = [
-    body('id').exists().isString().notEmpty({ ignore_whitespace: true }),
+    param('id').exists().isString().notEmpty({ ignore_whitespace: true }),
     body('name').exists().isString().notEmpty({ ignore_whitespace: true }),
     body('date').exists().isISO8601(),
     body('notes').optional({ nullable: true }).isString(),
   ];
 
   router.put(
-    '/workouts',
+    '/workouts/:id',
     workoutUpdateSchema,
     validateReqSchema,
     async (req: Request, res: Response) => {
       const workoutUpdater = container.get('workoutUpdater');
-      const { id, name, date, notes } = req.body;
+      const { id } = req.params;
+      const { name, date, notes } = req.body;
       const userId = req.user?.userId;
       if (userId == null) {
         return res.status(httpStatus.BAD_REQUEST).send();
@@ -71,16 +82,6 @@ export const registerWorkoutRoutes = (router: Router): void => {
       res.status(204).send();
     },
   );
-
-  router.get('/workouts', async (req: Request, res: Response) => {
-    const workoutFinder = container.get('workoutFinder');
-    const userId = req.user?.userId;
-    if (userId == null) {
-      return res.status(httpStatus.BAD_REQUEST).send();
-    }
-    const result = await workoutFinder.execute({ userId });
-    res.status(200).json(result);
-  });
 
   const workoutDetailSchema = [
     param('id').exists().isString().notEmpty({ ignore_whitespace: true }),

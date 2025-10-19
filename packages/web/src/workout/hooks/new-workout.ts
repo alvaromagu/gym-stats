@@ -15,7 +15,6 @@ export function useNewWorkout() {
     const { date: formDate, workoutName } = Object.fromEntries(
       formData.entries(),
     );
-    console.log({ formDate, workoutName });
     if (typeof workoutName !== 'string' || workoutName.trim().length === 0) {
       toast.error('Por favor, introduce un nombre válido.');
       return;
@@ -35,9 +34,8 @@ export function useNewWorkout() {
     setCreating(true);
     try {
       const { id } = await newWorkout(obj);
-      console.log({ id });
       toast.success('Entrenamiento creado correctamente.');
-      setLocation('/workouts');
+      setLocation(`/workouts/${id}`);
     } catch {
       toast.error('Error al crear el entrenamiento. Inténtalo de nuevo.');
     }

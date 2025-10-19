@@ -11,6 +11,7 @@ import { CredentialsPage } from './auth/pages/credentials';
 import { LinkCredentialRequestPage } from './auth/pages/link-credential-request';
 import { NewWorkoutPage } from './workout/pages/new-workout';
 import { WorkoutPage } from './workout/pages/workout';
+import { EditWorkoutPage } from './workout/pages/edit-workout-page';
 
 export function Routes() {
   const { loading, hasToken, authenticated } = useAuthContext();

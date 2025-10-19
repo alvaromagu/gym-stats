@@ -32,8 +32,6 @@ export function WorkoutPage({
     return <p>loading...</p>;
   }
 
-  console.log({ workout, loading });
-
   return (
     <main className='p-2'>
       <Card>
