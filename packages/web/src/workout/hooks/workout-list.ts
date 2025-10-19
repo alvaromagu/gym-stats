@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getWorkotus } from '../services/get-workouts';
 import type { Workout } from '../types/workout-list';
 
-export function useWorkouts() {
+export function useWorkoutList() {
   const [loading, setLoading] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
 

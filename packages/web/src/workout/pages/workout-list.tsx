@@ -1,5 +1,5 @@
 import { Button } from '@/shared/components/ui/button';
-import { useWorkouts } from '../hooks/workouts';
+import { useWorkoutList } from '../hooks/workout-list';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 import { Link } from 'wouter';
 import { BicepsFlexed, Dumbbell } from 'lucide-react';
@@ -14,8 +14,8 @@ import {
 } from '@/shared/components/ui/empty';
 import { WorkoutListItem } from '../components/workout-list-item';
 
-export function WorkoutsPage() {
-  const { loading, workouts, reload } = useWorkouts();
+export function WorkoutListPage() {
+  const { loading, workouts, reload } = useWorkoutList();
 
   return (
     <main className='p-2 flex flex-col gap-4'>
