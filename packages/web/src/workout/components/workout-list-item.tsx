@@ -23,7 +23,7 @@ export function WorkoutListItem({
   const { removing, remove } = useWorkoutListItem({ workout });
 
   return (
-    <Item key={workout.id} role='listitem' variant={'muted'} size={'sm'}>
+    <Item role='listitem' variant={'muted'} size={'sm'}>
       <ItemMedia variant={'icon'}>
         <Dumbbell />
       </ItemMedia>

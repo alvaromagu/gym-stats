@@ -115,9 +115,9 @@ function NoExercises({ workoutId }: { workoutId: string }) {
 function AddExerciseLink({ workoutId }: { workoutId: string }) {
   return (
     <Button asChild className='w-full'>
-      <Link to={`/${workoutId}/exercises/new`}>
+      <Link to={`/workouts/${workoutId}/exercises/new`}>
         <BicepsFlexed />
-        Añadir ejercicios
+        Añadir ejercicio
       </Link>
     </Button>
   );

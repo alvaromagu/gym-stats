@@ -47,28 +47,28 @@ function validateRepetitions(repetitions: number): void {
 }
 
 function validateGroupId(groupId: string | null): void {
-  if (groupId !== null && typeof groupId !== 'string') {
+  if (groupId != null && typeof groupId !== 'string') {
     throw new Error('Invalid groupId: must be a string or null');
   }
 }
 
 function validateRpe(rpe: number | null): void {
-  if (rpe !== null && (typeof rpe !== 'number' || !Number.isInteger(rpe))) {
+  if (rpe != null && (typeof rpe !== 'number' || !Number.isInteger(rpe))) {
     throw new Error('Invalid rpe: must be an integer or null');
   }
-  if (rpe !== null && (rpe < 1 || rpe > 10)) {
+  if (rpe != null && (rpe < 1 || rpe > 10)) {
     throw new Error('Invalid rpe: must be between 1 and 10');
   }
 }
 
 function validateToFailure(toFailure: boolean | null): void {
-  if (toFailure !== null && typeof toFailure !== 'boolean') {
+  if (toFailure != null && typeof toFailure !== 'boolean') {
     throw new Error('Invalid toFailure: must be a boolean or null');
   }
 }
 
 function validateNotes(notes: string | null): void {
-  if (notes !== null && typeof notes !== 'string') {
+  if (notes != null && typeof notes !== 'string') {
     throw new Error('Invalid notes: must be a string or null');
   }
 }
