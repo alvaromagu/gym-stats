@@ -1,5 +1,5 @@
 import { useWorkout } from '../hooks/workout';
-import { Dumbbell, Pencil } from 'lucide-react';
+import { BicepsFlexed, Dumbbell, Pencil } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Link } from 'wouter';
 import {
@@ -8,8 +8,17 @@ import {
   CardTitle,
   CardDescription,
   CardAction,
+  CardContent,
 } from '@/shared/components/ui/card';
 import { WorkoutNotFound } from '../components/workout-not-found';
+import {
+  Empty,
+  EmptyContent,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/shared/components/ui/empty';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Item, ItemGroup } from '@/shared/components/ui/item';
 
 export function WorkoutPage({
   params: { id },
@@ -54,7 +63,62 @@ export function WorkoutPage({
             </Button>
           </CardAction>
         </CardHeader>
+        <CardContent className='flex flex-col gap-6'>
+          {workout.exercises.length === 0 && (
+            <NoExercises workoutId={workout.id} />
+          )}
+          {workout.exercises.length > 0 && (
+            <>
+              <ItemGroup className='gap-2'>
+                {workout.exercises.map((exercise, index) => (
+                  <Item
+                    key={index}
+                    role='listitem'
+                    variant={'muted'}
+                    size={'sm'}
+                  >
+                    {JSON.stringify(exercise)}
+                  </Item>
+                ))}
+              </ItemGroup>
+              <AddExerciseLink workoutId={workout.id} />
+            </>
+          )}
+          {workout.notes != null && workout.notes !== '' && (
+            <Textarea
+              readOnly
+              value={workout.notes}
+              className='resize-none max-h-60'
+            />
+          )}
+        </CardContent>
       </Card>
     </main>
+  );
+}
+
+function NoExercises({ workoutId }: { workoutId: string }) {
+  return (
+    <Empty className='bg-card py-4 md:py-4 gap-4'>
+      <EmptyHeader>
+        <EmptyTitle>
+          Parece que no has añadido ejercicios a este entrenamiento
+        </EmptyTitle>
+      </EmptyHeader>
+      <EmptyContent>
+        <AddExerciseLink workoutId={workoutId} />
+      </EmptyContent>
+    </Empty>
+  );
+}
+
+function AddExerciseLink({ workoutId }: { workoutId: string }) {
+  return (
+    <Button asChild className='w-full'>
+      <Link to={`/${workoutId}/exercises/new`}>
+        <BicepsFlexed />
+        Añadir ejercicios
+      </Link>
+    </Button>
   );
 }
