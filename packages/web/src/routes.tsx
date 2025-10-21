@@ -30,17 +30,17 @@ export function Routes() {
         />
         <AuthRoute protected path='/' component={WorkoutListPage} />
         <AuthRoute protected path='/workouts/new' component={NewWorkoutPage} />
-        <AuthRoute protected path='/workouts/:id' component={WorkoutPage} />
-        <AuthRoute
-          protected
-          path='/workouts/:id/edit'
-          component={EditWorkoutPage}
-        />
-        <AuthRoute
-          protected
-          path='/workouts/:id/exercises/new'
-          component={NewExercisePage}
-        />
+        <AuthRoute protected path='/workouts/:id' nest>
+          <Switch>
+            <AuthRoute protected path='/edit' component={EditWorkoutPage} />
+            <AuthRoute
+              protected
+              path='/exercises/new'
+              component={NewExercisePage}
+            />
+            <AuthRoute protected path='' component={WorkoutPage} />
+          </Switch>
+        </AuthRoute>
         <AuthRoute protected path='/profile' component={ProfilePage} />
         <AuthRoute
           protected

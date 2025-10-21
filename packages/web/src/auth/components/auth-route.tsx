@@ -1,6 +1,7 @@
 import {
   Redirect,
   Route,
+  Router,
   type DefaultParams,
   type PathPattern,
   type RouteProps,
@@ -29,4 +30,22 @@ export function AuthRoute<
     return <Redirect to='/' />;
   }
   return <Route {...props} />;
+}
+
+export type AuthRouterProps = React.ComponentProps<typeof Router> & {
+  protected?: boolean;
+};
+
+export function AuthRouter(props: AuthRouterProps) {
+  const { loading, authenticated } = useAuthContext();
+  if (loading) {
+    return null;
+  }
+  if (!authenticated && props.protected === true) {
+    return <Redirect to='/login' />;
+  }
+  if (authenticated && props.protected !== true) {
+    return <Redirect to='/' />;
+  }
+  return <Router {...props} />;
 }

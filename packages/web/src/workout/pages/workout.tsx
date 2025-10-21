@@ -63,7 +63,7 @@ export function WorkoutPage({
           </div>
           <CardAction>
             <Button asChild variant={'secondary'}>
-              <Link href={`/workouts/${id}/edit`}>
+              <Link href={`/edit`}>
                 <Pencil />
                 Editar
               </Link>
@@ -92,9 +92,7 @@ export function WorkoutPage({
                     </ItemContent>
                     <ItemActions>
                       <Button asChild variant={'outline'} size={'icon'}>
-                        <Link
-                          to={`/workouts/${workout.id}/exercises/${exercise.id}/edit`}
-                        >
+                        <Link to={`/exercises/${exercise.id}/edit`}>
                           <Pencil />
                         </Link>
                       </Button>
@@ -102,7 +100,7 @@ export function WorkoutPage({
                   </Item>
                 ))}
               </ItemGroup>
-              <AddExerciseLink workoutId={workout.id} />
+              <AddExerciseLink />
             </>
           )}
           {workout.notes != null && workout.notes !== '' && (
@@ -127,16 +125,16 @@ function NoExercises({ workoutId }: { workoutId: string }) {
         </EmptyTitle>
       </EmptyHeader>
       <EmptyContent>
-        <AddExerciseLink workoutId={workoutId} />
+        <AddExerciseLink />
       </EmptyContent>
     </Empty>
   );
 }
 
-function AddExerciseLink({ workoutId }: { workoutId: string }) {
+function AddExerciseLink() {
   return (
     <Button asChild className='w-full'>
-      <Link to={`/workouts/${workoutId}/exercises/new`}>
+      <Link to={`/exercises/new`}>
         <BicepsFlexed />
         Añadir ejercicio
       </Link>
