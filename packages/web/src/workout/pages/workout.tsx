@@ -1,4 +1,3 @@
-import { useWorkout } from '../hooks/workout';
 import { BicepsFlexed, Dumbbell, Pencil } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Link } from 'wouter';
@@ -26,15 +25,10 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/shared/components/ui/item';
+import { useWorkoutContext } from '../hooks/workout-context';
 
-export function WorkoutPage({
-  params: { id },
-}: {
-  params: {
-    id: string;
-  };
-}) {
-  const { workout, loading } = useWorkout({ id });
+export function WorkoutPage() {
+  const { workout, loading } = useWorkoutContext();
 
   if (workout == null && !loading) {
     return (

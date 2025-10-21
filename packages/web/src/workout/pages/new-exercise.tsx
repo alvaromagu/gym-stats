@@ -25,6 +25,7 @@ import {
   ItemTitle,
 } from '@/shared/components/ui/item';
 import { Trash2 } from 'lucide-react';
+import { WorkoutNotFound } from '../components/workout-not-found';
 
 export function NewExercisePage({
   params: { id: workoutId },
@@ -33,13 +34,34 @@ export function NewExercisePage({
     id: string;
   };
 }) {
-  const { sets, creating, handleSubmit, addSet, updateSet, removeSet } =
-    useNewExercise({ workoutId });
+  const {
+    workout,
+    loading,
+    sets,
+    creating,
+    handleSubmit,
+    addSet,
+    updateSet,
+    removeSet,
+  } = useNewExercise({ workoutId });
+
+  if (workout == null && !loading) {
+    return (
+      <main className='p-2'>
+        <WorkoutNotFound />
+      </main>
+    );
+  }
+
+  if (loading || workout == null) {
+    return <p>loading...</p>;
+  }
+
   return (
     <main className='p-2'>
       <Card>
         <CardHeader>
-          <CardTitle>Nuevo Ejercicio</CardTitle>
+          <CardTitle>{workout.name} - Nuevo Ejercicio</CardTitle>
           <CardDescription>
             Añade un nuevo ejercicio a tu entrenamiento.
           </CardDescription>

@@ -21,11 +21,7 @@ import { CalendarIcon } from 'lucide-react';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Spinner } from '@/shared/components/ui/spinner';
 
-export function EditWorkoutPage({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
+export function EditWorkoutPage() {
   const {
     workout,
     loading,
@@ -35,7 +31,7 @@ export function EditWorkoutPage({
     setDate,
     setDatePickerOpenned,
     handleSubmit,
-  } = useEditWorkout({ id });
+  } = useEditWorkout();
 
   if (workout == null && !loading) {
     return (

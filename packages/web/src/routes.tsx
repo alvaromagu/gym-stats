@@ -13,6 +13,7 @@ import { NewWorkoutPage } from './workout/pages/new-workout';
 import { WorkoutPage } from './workout/pages/workout';
 import { EditWorkoutPage } from './workout/pages/edit-workout-page';
 import { NewExercisePage } from './workout/pages/new-exercise';
+import { WorkoutProvider } from './workout/components/workout-provider';
 
 export function Routes() {
   const { loading, hasToken, authenticated } = useAuthContext();
@@ -31,15 +32,19 @@ export function Routes() {
         <AuthRoute protected path='/' component={WorkoutListPage} />
         <AuthRoute protected path='/workouts/new' component={NewWorkoutPage} />
         <AuthRoute protected path='/workouts/:id' nest>
-          <Switch>
-            <AuthRoute protected path='/edit' component={EditWorkoutPage} />
-            <AuthRoute
-              protected
-              path='/exercises/new'
-              component={NewExercisePage}
-            />
-            <AuthRoute protected path='' component={WorkoutPage} />
-          </Switch>
+          {(params) => (
+            <WorkoutProvider params={params}>
+              <Switch>
+                <AuthRoute protected path='/edit' component={EditWorkoutPage} />
+                <AuthRoute
+                  protected
+                  path='/exercises/new'
+                  component={NewExercisePage}
+                />
+                <AuthRoute protected path='' component={WorkoutPage} />
+              </Switch>
+            </WorkoutProvider>
+          )}
         </AuthRoute>
         <AuthRoute protected path='/profile' component={ProfilePage} />
         <AuthRoute

@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { getWorkoutDetail } from '../services/get-workout-detail';
 import type { WorkoutDetail } from '../types/workout-detail';
 
-export function useWorkout({ id }: { id: string }) {
+export interface WorkoutState {
+  workout: null | WorkoutDetail;
+  loading: boolean;
+  reload: () => Promise<void>;
+}
+
+export function useWorkout({ id }: { id: string }): WorkoutState {
   const [workout, setWorkout] = useState<null | WorkoutDetail>(null);
   const [loading, setLoading] = useState(true);
 

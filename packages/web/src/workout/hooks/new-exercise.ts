@@ -7,6 +7,7 @@ import { newExercise } from '../services/new-exercise';
 import { toast } from 'sonner';
 import { useLocation } from 'wouter';
 import { delay } from '@/shared/lib/delay';
+import { useWorkoutContext } from './workout-context';
 
 const buildSet = ({ setNumber } = { setNumber: 1 }) => ({
   id: crypto.randomUUID(),
@@ -16,6 +17,7 @@ const buildSet = ({ setNumber } = { setNumber: 1 }) => ({
 });
 
 export function useNewExercise({ workoutId }: { workoutId: string }) {
+  const { workout, loading } = useWorkoutContext();
   const [, setLocation] = useLocation();
   const [sets, setSets] = useState<Array<NewExerciseSet & { id: string }>>([
     buildSet(),
@@ -74,5 +76,14 @@ export function useNewExercise({ workoutId }: { workoutId: string }) {
     setSets(newSets);
   }
 
-  return { sets, creating, handleSubmit, addSet, updateSet, removeSet };
+  return {
+    workout,
+    sets,
+    loading,
+    creating,
+    handleSubmit,
+    addSet,
+    updateSet,
+    removeSet,
+  };
 }

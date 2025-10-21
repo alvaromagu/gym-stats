@@ -1,11 +1,11 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useWorkout } from './workout';
 import { toast } from 'sonner';
 import { updateWorkout } from '../services/update-workout';
 import { useLocation } from 'wouter';
+import { useWorkoutContext } from './workout-context';
 
-export function useEditWorkout({ id }: { id: string }) {
-  const { workout, loading } = useWorkout({ id });
+export function useEditWorkout() {
+  const { workout, loading } = useWorkoutContext();
   const [, setLocation] = useLocation();
   const [saving, setSaving] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -19,6 +19,9 @@ export function useEditWorkout({ id }: { id: string }) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (workout == null) {
+      return;
+    }
     const formData = new FormData(event.currentTarget);
     const {
       workoutName,
@@ -38,7 +41,7 @@ export function useEditWorkout({ id }: { id: string }) {
       return;
     }
     const obj = {
-      id,
+      id: workout.id,
       name: workoutName.trim(),
       date: formDate,
       notes: typeof workoutNotes === 'string' ? workoutNotes.trim() : '',
@@ -47,7 +50,7 @@ export function useEditWorkout({ id }: { id: string }) {
     try {
       await updateWorkout(obj);
       toast.success('Entrenamiento actualizado correctamente.');
-      setLocation(`/workouts/${id}`);
+      setLocation(`/workouts/${workout.id}`);
     } catch {
       toast.error('Error al actualizar el entrenamiento. Inténtalo de nuevo.');
     }
