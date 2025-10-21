@@ -18,7 +18,14 @@ import {
   EmptyTitle,
 } from '@/shared/components/ui/empty';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { Item, ItemGroup } from '@/shared/components/ui/item';
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+} from '@/shared/components/ui/item';
 
 export function WorkoutPage({
   params: { id },
@@ -74,10 +81,24 @@ export function WorkoutPage({
                   <Item
                     key={index}
                     role='listitem'
-                    variant={'muted'}
+                    variant={'outline'}
                     size={'sm'}
                   >
-                    {JSON.stringify(exercise)}
+                    <ItemMedia>
+                      <BicepsFlexed />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>{exercise.name}</ItemTitle>
+                    </ItemContent>
+                    <ItemActions>
+                      <Button asChild variant={'outline'} size={'icon'}>
+                        <Link
+                          to={`/workouts/${workout.id}/exercises/${exercise.id}/edit`}
+                        >
+                          <Pencil />
+                        </Link>
+                      </Button>
+                    </ItemActions>
                   </Item>
                 ))}
               </ItemGroup>

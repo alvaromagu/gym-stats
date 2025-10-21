@@ -4,5 +4,10 @@ export interface WorkoutDetail {
   name: string;
   date: string;
   notes: string | null;
-  exercises: [];
+  exercises: Array<{
+    id: string;
+    workoutId: string;
+    name: string;
+    sortOrder: number;
+  }>;
 }

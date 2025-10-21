@@ -20,7 +20,6 @@ import { Spinner } from '@/shared/components/ui/spinner';
 import type { NewExerciseSet } from '../types/new-exercise-request';
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemGroup,
   ItemTitle,
@@ -84,7 +83,7 @@ export function NewExercisePage({
                 <Button
                   type='button'
                   onClick={addSet}
-                  variant={'secondary'}
+                  variant={'outline'}
                   disabled={creating}
                 >
                   Añadir Serie
@@ -117,9 +116,27 @@ function SetListItem({
   remove: (props: { id: string }) => void;
 }) {
   return (
-    <Item role='listitem' variant={'muted'} size={'sm'} className='items-start'>
-      <ItemContent className='gap-4'>
-        <ItemTitle>Serie {set.setNumber}</ItemTitle>
+    <Item
+      role='listitem'
+      variant={'outline'}
+      size={'sm'}
+      className='items-start'
+    >
+      <ItemContent>
+        <ItemTitle className='w-full flex justify-between'>
+          Serie {set.setNumber}
+          <Button
+            variant={'destructive'}
+            size={'icon'}
+            type='button'
+            onClick={() => {
+              remove({ id: set.id });
+            }}
+            disabled={creating}
+          >
+            <Trash2 />
+          </Button>
+        </ItemTitle>
         <FieldGroup className='flex-row'>
           <Field>
             <FieldLabel htmlFor={`repetitions-${set.id}`}>
@@ -157,19 +174,6 @@ function SetListItem({
           </Field>
         </FieldGroup>
       </ItemContent>
-      <ItemActions>
-        <Button
-          variant={'destructive'}
-          size={'icon'}
-          type='button'
-          onClick={() => {
-            remove({ id: set.id });
-          }}
-          disabled={creating}
-        >
-          <Trash2 />
-        </Button>
-      </ItemActions>
     </Item>
   );
 }
