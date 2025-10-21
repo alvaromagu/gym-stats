@@ -27,10 +27,10 @@ import {
 import { Trash2 } from 'lucide-react';
 
 export function NewExercisePage({
-  params: { workoutId },
+  params: { id: workoutId },
 }: {
   params: {
-    workoutId: string;
+    id: string;
   };
 }) {
   const { sets, creating, handleSubmit, addSet, updateSet, removeSet } =
